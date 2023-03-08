@@ -1,4 +1,5 @@
-using Unity.VisualScripting;
+using System;
+
 using UnityEditor;
 using UnityEngine;
 
@@ -12,12 +13,18 @@ namespace NodeEditorFramework
         private NodeCanvas m_LoadedNodeCanvas;
         public NodeCanvas LoadedNodeCanvas => m_LoadedNodeCanvas;
 
+        public const string m_editorPath = "Assets/NodeCanvases/";
         private string m_openedCanvas = "New Canvas";
         private string m_openedCanvasPath;
 
         public GUIStyle m_NodeBase;
         public GUIStyle m_NodeBox;
         public GUIStyle m_NodeLabelBold;
+        public static GUIStyle m_NodeButton;
+
+        private float m_sideWindowWidth = 400;
+        public Rect SideWindowRect => new Rect(position.width - m_sideWindowWidth, 0, m_sideWindowWidth, position.height);
+
 
 
         private Vector2 m_offset;
@@ -47,7 +54,11 @@ namespace NodeEditorFramework
             m_NodeLabelBold.fontStyle = FontStyle.Bold;
             m_NodeLabelBold.wordWrap = false;
 
+
+            m_NodeButton = new GUIStyle();
+            m_NodeButton.normal.textColor = new Color(0.3f, 0.3f, 0.3f);
         }
+
 
 
 
@@ -74,7 +85,7 @@ namespace NodeEditorFramework
         {
             if (System.String.IsNullOrEmpty(path))
                 return;
-            Object[] objects = AssetDatabase.LoadAllAssetsAtPath(path);
+            UnityEngine.Object[] objects = AssetDatabase.LoadAllAssetsAtPath(path);
             if (objects.Length == 0)
                 return;
             NodeCanvas newNodeCanvas = null;
@@ -133,6 +144,34 @@ namespace NodeEditorFramework
             Repaint();
         }
 
+        public void DrawSideWindow()
+        {
+            GUILayout.Label(new GUIContent("Node Editor (" + m_openedCanvas + ")", "The currently opened canvas in the Node Editor"), m_NodeLabelBold);
+            GUILayout.Label(new GUIContent("Do note that changes will be saved automatically!", "All changes are automatically saved to the currently opened canvas (see above) if it's present in the Project view."), m_NodeBase);
+            if (GUILayout.Button(new GUIContent("Save Canvas", "Saves the canvas as a new Canvas Asset File in the Assets Folder"), m_NodeButton))
+            {
+                SaveNodeCanvas(EditorUtility.SaveFilePanelInProject("Save Node Canvas", "Node Canvas", "asset", "Saving to a file is only needed once.", m_editorPath + "Saves/"));
+            }
+            if (GUILayout.Button(new GUIContent("Load Canvas", "Loads the canvas from a Canvas Asset File in the Assets Folder"), m_NodeButton))
+            {
+                string path = EditorUtility.OpenFilePanel("Load Node Canvas", m_editorPath + "Saves/", "asset");
+                if (!path.Contains(Application.dataPath))
+                {
+                    if (path != String.Empty)
+                        ShowNotification(new GUIContent("You should select an asset inside your project folder!"));
+                    return;
+                }
+                path = path.Replace(Application.dataPath, "Assets");
+                LoadNodeCanvas(path);
+            }
+            if (GUILayout.Button(new GUIContent("New Canvas", "Creates a new Canvas (remember to save the previous one to a referenced Canvas Asset File at least once before! Else it'll be lost!)"), m_NodeButton))
+            {
+                CreateNewNodeCanvas();
+            }
+            //knobSize = EditorGUILayout.IntSlider(new GUIContent("Handle Size", "The size of the handles of the Node Inputs/Outputs"), knobSize, 8, 32);
+        }
+
+
 
         private void OnGUI()
         {
@@ -145,6 +184,11 @@ namespace NodeEditorFramework
             if (m_LoadedNodeCanvas)
                 for (int i = 0; i < m_LoadedNodeCanvas.NodeCount; i++)
                     m_LoadedNodeCanvas.GetNode(i).Draw();
+
+            m_sideWindowWidth = Math.Min(600, Math.Max(200, (int)(position.width / 5)));
+            GUILayout.BeginArea(SideWindowRect, m_NodeBox);
+            DrawSideWindow();
+            GUILayout.EndArea();
 
             if (GUI.changed)
                 Repaint();
@@ -181,8 +225,8 @@ namespace NodeEditorFramework
             m_drag = delta;
 
             if (m_LoadedNodeCanvas)
-                for(int i = 0; i < m_LoadedNodeCanvas.NodeCount; i++)
-                    m_LoadedNodeCanvas.GetNode(i).OnDrag(delta);                
+                for (int i = 0; i < m_LoadedNodeCanvas.NodeCount; i++)
+                    m_LoadedNodeCanvas.GetNode(i).OnDrag(delta);
 
             GUI.changed = true;
         }
