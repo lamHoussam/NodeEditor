@@ -18,6 +18,7 @@ namespace NodeEditorFramework
         private string m_openedCanvasPath;
 
         public GUIStyle m_NodeBase;
+        public GUIStyle m_SelectedNodeBase;
         public GUIStyle m_NodeBox;
         public GUIStyle m_NodeLabelBold;
         public static GUIStyle m_NodeButton;
@@ -32,6 +33,8 @@ namespace NodeEditorFramework
 
         private float m_scale = 1;
 
+        private bool m_isInitialised = false;
+
         public static Texture2D ColorToTex(Color col)
         {
             Texture2D tex = new Texture2D(1, 1);
@@ -42,9 +45,17 @@ namespace NodeEditorFramework
 
         public void Init()
         {
-            m_NodeBase = new GUIStyle();
+            m_NodeBase = new GUIStyle(GUI.skin.box);
             m_NodeBase.normal.background = ColorToTex(new Color(0.5f, 0.5f, 0.5f));
             m_NodeBase.normal.textColor = new Color(0.7f, 0.7f, 0.7f);
+            m_NodeBase.alignment = TextAnchor.MiddleCenter;
+
+
+            m_SelectedNodeBase = new GUIStyle(GUI.skin.box);
+            m_SelectedNodeBase.normal.background = ColorToTex(new Color(1, 1, 1f));
+            m_SelectedNodeBase.normal.textColor = new Color(1, 1, 1);
+            m_SelectedNodeBase.alignment = TextAnchor.MiddleCenter;
+
 
             m_NodeBox = new GUIStyle(m_NodeBase);
             m_NodeBox.margin = new RectOffset(8, 8, 5, 8);
@@ -57,6 +68,9 @@ namespace NodeEditorFramework
 
             m_NodeButton = new GUIStyle();
             m_NodeButton.normal.textColor = new Color(0.3f, 0.3f, 0.3f);
+
+            m_isInitialised = true;
+
         }
 
 
@@ -71,8 +85,7 @@ namespace NodeEditorFramework
             if (Instance.LoadedNodeCanvas == null)
                 Instance.CreateNewNodeCanvas();
 
-            m_Instance.Init();
-
+            //m_Instance.Init();
             Instance.m_scale = 1;
         }
 
@@ -147,12 +160,12 @@ namespace NodeEditorFramework
         public void DrawSideWindow()
         {
             GUILayout.Label(new GUIContent("Node Editor (" + m_openedCanvas + ")", "The currently opened canvas in the Node Editor"), m_NodeLabelBold);
-            GUILayout.Label(new GUIContent("Do note that changes will be saved automatically!", "All changes are automatically saved to the currently opened canvas (see above) if it's present in the Project view."), m_NodeBase);
-            if (GUILayout.Button(new GUIContent("Save Canvas", "Saves the canvas as a new Canvas Asset File in the Assets Folder"), m_NodeButton))
+            //GUILayout.Label(new GUIContent("Do note that changes will be saved automatically!", "All changes are automatically saved to the currently opened canvas (see above) if it's present in the Project view."), m_NodeBase);
+            if (GUILayout.Button(new GUIContent("Save Canvas", "Saves the canvas as a new Canvas Asset File in the Assets Folder")))
             {
                 SaveNodeCanvas(EditorUtility.SaveFilePanelInProject("Save Node Canvas", "Node Canvas", "asset", "Saving to a file is only needed once.", m_editorPath + "Saves/"));
             }
-            if (GUILayout.Button(new GUIContent("Load Canvas", "Loads the canvas from a Canvas Asset File in the Assets Folder"), m_NodeButton))
+            if (GUILayout.Button(new GUIContent("Load Canvas", "Loads the canvas from a Canvas Asset File in the Assets Folder")))
             {
                 string path = EditorUtility.OpenFilePanel("Load Node Canvas", m_editorPath + "Saves/", "asset");
                 if (!path.Contains(Application.dataPath))
@@ -164,7 +177,7 @@ namespace NodeEditorFramework
                 path = path.Replace(Application.dataPath, "Assets");
                 LoadNodeCanvas(path);
             }
-            if (GUILayout.Button(new GUIContent("New Canvas", "Creates a new Canvas (remember to save the previous one to a referenced Canvas Asset File at least once before! Else it'll be lost!)"), m_NodeButton))
+            if (GUILayout.Button(new GUIContent("New Canvas", "Creates a new Canvas (remember to save the previous one to a referenced Canvas Asset File at least once before! Else it'll be lost!)")))
             {
                 CreateNewNodeCanvas();
             }
@@ -175,16 +188,24 @@ namespace NodeEditorFramework
 
         private void OnGUI()
         {
+            if (!m_isInitialised)
+                Init();
 
             DrawGrid(20, .2f, Color.gray);
             DrawGrid(100, .2f, Color.gray);
 
+
+            if (m_LoadedNodeCanvas)
+                m_LoadedNodeCanvas.ProcessNodeEvents(Event.current);
+
             ProcessEvents(Event.current);
 
             if (m_LoadedNodeCanvas)
+            {
                 for (int i = 0; i < m_LoadedNodeCanvas.NodeCount; i++)
                     m_LoadedNodeCanvas.GetNode(i).Draw();
 
+            }
             m_sideWindowWidth = Math.Min(600, Math.Max(200, (int)(position.width / 5)));
             GUILayout.BeginArea(SideWindowRect, m_NodeBox);
             DrawSideWindow();
@@ -205,6 +226,8 @@ namespace NodeEditorFramework
                 case EventType.MouseDown:
                     if (e.button == 1) 
                         ProcessContextMenu(e.mousePosition);
+
+
                     break;
 
                 case EventType.MouseDrag:

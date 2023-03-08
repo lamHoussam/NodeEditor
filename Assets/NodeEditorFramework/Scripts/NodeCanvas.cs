@@ -15,5 +15,20 @@ namespace NodeEditorFramework
             m_Nodes.Add(node);
         }
         public void RemoveNode(Node node) => m_Nodes?.Remove(node);
+
+        public void ProcessNodeEvents(Event e)
+        {
+            if (m_Nodes == null)
+                return;
+
+            for (int i = m_Nodes.Count - 1; i >= 0; i--)
+            {
+                bool guiChanged = m_Nodes[i].ProcessEvents(e);
+
+                if (guiChanged)
+                    GUI.changed = true;
+            }
+
+        }
     }
 }

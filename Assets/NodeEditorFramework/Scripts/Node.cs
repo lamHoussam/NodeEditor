@@ -1,11 +1,7 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using TMPro;
-using Unity.CodeEditor;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Windows;
 
 namespace NodeEditorFramework
 {
@@ -25,6 +21,9 @@ namespace NodeEditorFramework
         public NodeConnection GetOutConnection(int ind) => m_OutConnections[ind];
         public int OutConnectionsCount => m_OutConnections.Count;
 
+        protected bool m_isSelected;
+        protected bool m_isDragged;
+
         public virtual void Draw()
         {
 
@@ -38,6 +37,64 @@ namespace NodeEditorFramework
         {
             m_Rect.position += delta;
         }
+
+        public void Select()
+        {
+            m_isSelected = true;
+        }
+
+        public void Deselect()
+        {
+            m_isSelected = false;
+        }
+
+        public bool ProcessEvents(Event e)
+        {
+
+            switch (e.type)
+            {
+                case EventType.MouseDown:
+                    if (e.button == 0)
+                    {
+                        if (m_Rect.Contains(e.mousePosition))
+                        {
+                            m_isDragged = true;
+                            GUI.changed = true;
+
+                            m_isSelected = true;
+                        }
+                        else
+                        {
+                            GUI.changed = true;
+                            m_isSelected = false;
+                        }
+                    }
+
+                    if (e.button == 1 && m_isSelected && m_Rect.Contains(e.mousePosition))
+                    {
+                        //ProcessContextMenu();
+                        e.Use();
+                    }
+
+                    break;
+
+                case EventType.MouseUp:
+                    m_isDragged = false;
+                    break;
+
+                case EventType.MouseDrag:
+                    if (e.button == 0 && m_isDragged)
+                    {
+                        OnDrag(e.delta);
+                        e.Use();
+                        return true;
+                    }
+                    break;
+            }
+
+            return false;
+        }
+
 
         protected void Init()
         {

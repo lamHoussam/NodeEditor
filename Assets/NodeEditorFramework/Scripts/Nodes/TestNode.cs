@@ -28,7 +28,7 @@ namespace NodeEditorFramework
             base.Draw();
             Rect boxRect = new Rect(Position, Size);
 
-            GUI.Box(boxRect, name, NodeEditor.Instance.m_NodeBase);
+            GUI.Box(boxRect, name, m_isSelected ? NodeEditor.Instance.m_SelectedNodeBase : NodeEditor.Instance.m_NodeBase);
             //Rect rect = new Rect(Position + Vector2.up * (Height - 5), Size);
             //GUI.Box(rect, "Settings", NodeEditor.Instance.DefaultNodeStyle);
 
