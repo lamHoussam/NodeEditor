@@ -179,6 +179,11 @@ namespace NodeEditorFramework
         public void OnDrag(Vector2 delta)
         {
             m_drag = delta;
+
+            if (m_LoadedNodeCanvas)
+                for(int i = 0; i < m_LoadedNodeCanvas.NodeCount; i++)
+                    m_LoadedNodeCanvas.GetNode(i).OnDrag(delta);                
+
             GUI.changed = true;
         }
 

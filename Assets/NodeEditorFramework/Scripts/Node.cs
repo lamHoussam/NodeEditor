@@ -34,6 +34,11 @@ namespace NodeEditorFramework
         {
         }
 
+        public virtual void OnDrag(Vector2 delta)
+        {
+            m_Rect.position += delta;
+        }
+
         protected void Init()
         {
             NodeEditor.Instance.LoadedNodeCanvas.AddNode(this);
