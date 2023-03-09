@@ -13,11 +13,11 @@ namespace NodeEditorFramework
         public float Width => m_Rect.width;
         public float Height => m_Rect.height;
 
-        protected NodeConnection m_InConnection;
-        protected NodeConnection m_OutConnection;
+        protected NodeConnectionPoint m_InConnection;
+        protected NodeConnectionPoint m_OutConnection;
 
-        public NodeConnection InConnection => m_InConnection;
-        public NodeConnection OutConnection => m_OutConnection;
+        public NodeConnectionPoint InConnection => m_InConnection;
+        public NodeConnectionPoint OutConnection => m_OutConnection;
 
         //private List<NodeConnection> m_InConnections = new List<NodeConnection>();
         //public NodeConnection GetInConnection(int ind) => m_InConnections[ind];

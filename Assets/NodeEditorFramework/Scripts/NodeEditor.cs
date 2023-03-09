@@ -1,6 +1,7 @@
 using System;
 
 using UnityEditor;
+using UnityEditor.MemoryProfiler;
 using UnityEngine;
 
 namespace NodeEditorFramework
@@ -28,6 +29,8 @@ namespace NodeEditorFramework
         private float m_sideWindowWidth = 400;
         public Rect SideWindowRect => new Rect(position.width - m_sideWindowWidth, 0, m_sideWindowWidth, position.height);
 
+
+        private NodeConnectionPoint m_SelectedInConnectionPoint, m_SelectedOutConnectionPoint;
 
 
         private Vector2 m_offset;
@@ -212,7 +215,10 @@ namespace NodeEditorFramework
                 for (int i = 0; i < m_LoadedNodeCanvas.NodeCount; i++)
                     m_LoadedNodeCanvas.GetNode(i).Draw();
 
+                for(int i = 0; i < m_LoadedNodeCanvas.NodeConnectionsCount; i++)
+                    m_LoadedNodeCanvas.GetNodeConnection(i).Draw();
             }
+
             m_sideWindowWidth = Math.Min(600, Math.Max(200, (int)(position.width / 5)));
             GUILayout.BeginArea(SideWindowRect, m_NodeBox);
             DrawSideWindow();
@@ -285,6 +291,57 @@ namespace NodeEditorFramework
                 default:
                     break;
             }
+        }
+
+        public void OnClickInPoint(NodeConnectionPoint connectionPoint)
+        {
+            m_SelectedInConnectionPoint = connectionPoint;
+
+            if (m_SelectedOutConnectionPoint == null)
+                return;
+
+            if (m_SelectedOutConnectionPoint.BodyNode != m_SelectedInConnectionPoint.BodyNode)
+                CreateConnection();
+
+            ClearConnectionSelection();
+
+        }
+
+        public void OnClickOutPoint(NodeConnectionPoint connectionPoint)
+        {
+            m_SelectedOutConnectionPoint = connectionPoint;
+
+            if (m_SelectedInConnectionPoint == null)
+                return;
+
+            if (m_SelectedOutConnectionPoint.BodyNode != m_SelectedInConnectionPoint.BodyNode)
+                CreateConnection();
+
+            ClearConnectionSelection();
+
+        }
+
+        public void CreateConnection()
+        {
+            //if (m_LoadedLogic)
+            //    m_LoadedLogic.AddConnection(new Connection(m_SelectedInPoint, m_SelectedOutPoint));
+            if (m_LoadedNodeCanvas)
+            {
+                NodeConnection connection = CreateInstance<NodeConnection>();
+                connection.SetNodeConnectionPoints(m_SelectedInConnectionPoint, m_SelectedOutConnectionPoint);
+                m_LoadedNodeCanvas.AddNodeConnection(connection);
+            }
+        }
+
+        public void ClearConnectionSelection()
+        {
+            m_SelectedInConnectionPoint = null;
+            m_SelectedOutConnectionPoint = null;
+        }
+
+        public void OnClickOutPoint()
+        {
+
         }
 
         private void DrawGrid(float gridSpacing, float gridOpacity, Color gridColor)
