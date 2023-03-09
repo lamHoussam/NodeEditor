@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace NodeEditorFramework
 {
-    public class NodeCanvas : ScriptableObject
+    public class NodeCanvas : ScriptableObject 
     {
         private List<Node> m_Nodes;
         public int NodeCount => m_Nodes == null ? 0 : m_Nodes.Count;
@@ -12,6 +12,10 @@ namespace NodeEditorFramework
         public List<NodeConnection> m_NodesConnections;
         public int NodeConnectionsCount => m_NodesConnections == null ? 0 : m_NodesConnections.Count;
         public NodeConnection GetNodeConnection(int ind) => m_NodesConnections[ind];
+
+        private List<NodeEditorParameter> m_Parameters;
+        public int ParametersCount => m_Parameters == null ? 0 : m_Parameters.Count;
+        public NodeEditorParameter GetParameter(int ind) => m_Parameters[ind];
 
         public void AddNode(Node node)
         {
@@ -47,5 +51,15 @@ namespace NodeEditorFramework
 
         public void RemoveNodeConnection(NodeConnection nodeConnection) => m_NodesConnections?.Remove(nodeConnection);
 
+        public void Evaluate()
+        {
+            
+        }
+
+        public void AddParameter(NodeEditorParameter parameter)
+        {
+            m_Parameters ??= new List<NodeEditorParameter>();
+            m_Parameters.Add(parameter);
+        }
     }
 }

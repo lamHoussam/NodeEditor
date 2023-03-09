@@ -28,7 +28,7 @@ namespace NodeEditorFramework
 
         private float m_sideWindowWidth = 400;
         public Rect SideWindowRect => new Rect(position.width - m_sideWindowWidth, 0, m_sideWindowWidth, position.height);
-
+        public Rect ParameterWindowRect => new Rect(0, 0, m_sideWindowWidth, position.height);
 
         private NodeConnectionPoint m_SelectedInConnectionPoint, m_SelectedOutConnectionPoint;
 
@@ -194,6 +194,21 @@ namespace NodeEditorFramework
             //knobSize = EditorGUILayout.IntSlider(new GUIContent("Handle Size", "The size of the handles of the Node Inputs/Outputs"), knobSize, 8, 32);
         }
 
+        public void DrawParametersWindow()
+        {
+            if (!m_LoadedNodeCanvas)
+                return;
+
+            Rect rect = new Rect(Vector2.up * 100, new Vector2(m_sideWindowWidth, 100));
+
+            GUILayout.Label(new GUIContent("Parameters"), m_NodeLabelBold);
+            for (int i = 0; i < m_LoadedNodeCanvas.ParametersCount; i++)
+            {
+                m_LoadedNodeCanvas.GetParameter(i).Display(rect);
+                rect.position += Vector2.up * 100;
+            }
+        }
+
 
 
         private void OnGUI()
@@ -224,6 +239,11 @@ namespace NodeEditorFramework
             DrawSideWindow();
             GUILayout.EndArea();
 
+            GUILayout.BeginArea(ParameterWindowRect, m_NodeBox);
+            DrawParametersWindow();
+            GUILayout.EndArea();
+            
+
             if (GUI.changed)
                 Repaint();
 
@@ -237,7 +257,7 @@ namespace NodeEditorFramework
             switch (e.type)
             {
                 case EventType.MouseDown:
-                    if (e.button == 1) 
+                    if (e.button == 1)
                         ProcessContextMenu(e.mousePosition);
 
 
@@ -278,8 +298,16 @@ namespace NodeEditorFramework
         {
             GenericMenu genericMenu = new GenericMenu();
             genericMenu.AddItem(new GUIContent("Add Test node"), false, () => OnClickAddNode(mousePosition, "TestNode"));
-            genericMenu.AddItem(new GUIContent("Add State Node "), false, () => OnClickAddNode(mousePosition, "StateNode"));
+            genericMenu.AddItem(new GUIContent("Add State Node"), false, () => OnClickAddNode(mousePosition, "StateNode"));
+            genericMenu.AddItem(new GUIContent("Add new Parameter"), false, () => OnClickAddParameter());
             genericMenu.ShowAsContext();
+        }
+
+        public void OnClickAddParameter()
+        {
+            if (!m_LoadedNodeCanvas)
+                return;
+            m_LoadedNodeCanvas.AddParameter(new NodeEditorParameter(ParameterType.Bool, (object)false));
         }
 
         public void OnClickAddNode(Vector2 position, string type)
