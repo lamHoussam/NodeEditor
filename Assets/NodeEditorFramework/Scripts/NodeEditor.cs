@@ -21,6 +21,8 @@ namespace NodeEditorFramework
         public GUIStyle m_SelectedNodeBase;
         public GUIStyle m_NodeBox;
         public GUIStyle m_NodeLabelBold;
+        public GUIStyle m_KnobStyle;
+
         public static GUIStyle m_NodeButton;
 
         private float m_sideWindowWidth = 400;
@@ -64,6 +66,11 @@ namespace NodeEditorFramework
             m_NodeLabelBold = new GUIStyle(m_NodeBase);
             m_NodeLabelBold.fontStyle = FontStyle.Bold;
             m_NodeLabelBold.wordWrap = false;
+
+            m_KnobStyle = new GUIStyle();
+            m_KnobStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn left.png") as Texture2D;
+            m_KnobStyle.active.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn left on.png") as Texture2D;
+            m_KnobStyle.border = new RectOffset(4, 4, 12, 12);
 
 
             m_NodeButton = new GUIStyle();
@@ -142,10 +149,10 @@ namespace NodeEditorFramework
               // Results in a big mess but there's no other way
                 Node node = m_LoadedNodeCanvas.GetNode(nodeCnt);
                 AssetDatabase.AddObjectToAsset(node, m_LoadedNodeCanvas);
-                for (int inCnt = 0; inCnt < node.InConnectionsCount; inCnt++)
-                    AssetDatabase.AddObjectToAsset(node.GetInConnection(inCnt), node);
-                for (int outCnt = 0; outCnt < node.OutConnectionsCount; outCnt++)
-                    AssetDatabase.AddObjectToAsset(node.GetOutConnection(outCnt), node);
+
+                AssetDatabase.AddObjectToAsset(node.InConnection, node);
+                AssetDatabase.AddObjectToAsset(node.OutConnection, node);
+
             }
 
             string[] folders = path.Split(new char[] { '/' }, System.StringSplitOptions.None);

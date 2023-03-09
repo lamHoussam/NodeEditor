@@ -13,20 +13,27 @@ namespace NodeEditorFramework
         public float Width => m_Rect.width;
         public float Height => m_Rect.height;
 
-        private List<NodeConnection> m_InConnections = new List<NodeConnection>();
-        public NodeConnection GetInConnection(int ind) => m_InConnections[ind];
-        public int InConnectionsCount => m_InConnections.Count; 
+        protected NodeConnection m_InConnection;
+        protected NodeConnection m_OutConnection;
 
-        private List<NodeConnection> m_OutConnections = new List<NodeConnection>();
-        public NodeConnection GetOutConnection(int ind) => m_OutConnections[ind];
-        public int OutConnectionsCount => m_OutConnections.Count;
+        public NodeConnection InConnection => m_InConnection;
+        public NodeConnection OutConnection => m_OutConnection;
+
+        //private List<NodeConnection> m_InConnections = new List<NodeConnection>();
+        //public NodeConnection GetInConnection(int ind) => m_InConnections[ind];
+        //public int InConnectionsCount => m_InConnections.Count; 
+
+        //private List<NodeConnection> m_OutConnections = new List<NodeConnection>();
+        //public NodeConnection GetOutConnection(int ind) => m_OutConnections[ind];
+        //public int OutConnectionsCount => m_OutConnections.Count;
 
         protected bool m_isSelected;
         protected bool m_isDragged;
 
         public virtual void Draw()
         {
-
+            m_InConnection.Draw();
+            m_OutConnection.Draw();
         }
 
         public virtual void OnRemove()
@@ -102,10 +109,9 @@ namespace NodeEditorFramework
             if (!String.IsNullOrEmpty(AssetDatabase.GetAssetPath(NodeEditor.Instance.LoadedNodeCanvas)))
             {
                 AssetDatabase.AddObjectToAsset(this, NodeEditor.Instance.LoadedNodeCanvas);
-                for (int inCnt = 0; inCnt < m_InConnections.Count; inCnt++)
-                    AssetDatabase.AddObjectToAsset(m_InConnections[inCnt], this);
-                for (int outCnt = 0; outCnt < m_OutConnections.Count; outCnt++)
-                    AssetDatabase.AddObjectToAsset(m_OutConnections[outCnt], this);
+
+                AssetDatabase.AddObjectToAsset(m_InConnection, this);
+                AssetDatabase.AddObjectToAsset(m_OutConnection, this);
 
                 //AssetDatabase.ImportAsset(Node_Editor.editor.openedCanvasPath);
                 AssetDatabase.Refresh();
