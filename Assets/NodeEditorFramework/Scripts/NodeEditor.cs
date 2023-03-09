@@ -278,6 +278,7 @@ namespace NodeEditorFramework
         {
             GenericMenu genericMenu = new GenericMenu();
             genericMenu.AddItem(new GUIContent("Add Test node"), false, () => OnClickAddNode(mousePosition, "TestNode"));
+            genericMenu.AddItem(new GUIContent("Add State Node "), false, () => OnClickAddNode(mousePosition, "StateNode"));
             genericMenu.ShowAsContext();
         }
 
@@ -288,6 +289,11 @@ namespace NodeEditorFramework
                 case "TestNode":
                     TestNode.Create(new Rect(position, new Vector2(200, 50)));
                     break;
+
+                case "StateNode":
+                    StateNode.Create(new Rect(position, new Vector2(200, 50)));
+                    break;
+
                 default:
                     break;
             }
@@ -337,11 +343,6 @@ namespace NodeEditorFramework
         {
             m_SelectedInConnectionPoint = null;
             m_SelectedOutConnectionPoint = null;
-        }
-
-        public void OnClickOutPoint()
-        {
-
         }
 
         private void DrawGrid(float gridSpacing, float gridOpacity, Color gridColor)
