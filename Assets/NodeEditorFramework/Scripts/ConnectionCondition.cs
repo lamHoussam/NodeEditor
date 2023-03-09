@@ -3,35 +3,28 @@ using UnityEngine;
 
 namespace NodeEditorFramework
 {
-    public enum ParameterType
+    public class ConnectionCondition 
     {
-        Bool,
-        Int,
-    }
-
-    [System.Serializable]
-    public class NodeEditorParameter 
-    {
-        [SerializeField] private ParameterType m_Type;
-        public ParameterType Type => m_Type;
-
+        [SerializeField] private NodeEditorParameter m_Parameter;
         [SerializeField] private object m_Value;
-        public object Value => m_Value;
 
-        public NodeEditorParameter(ParameterType type, object value)
+        public ConnectionCondition(NodeEditorParameter parameter, object value)
         {
-            m_Type = type;
+            m_Parameter = parameter;
             m_Value = value;
         }
 
         public void Display(Rect rect)
         {
-            GUILayout.BeginArea(rect, NodeEditor.Instance.m_NodeBox);
+            if (m_Parameter == null)
+                return;
+
+            //GUILayout.BeginArea(rect, NodeEditor.Instance.m_NodeBox);
             GUILayout.Label("Parameter");
 
-            m_Type = (ParameterType)EditorGUILayout.EnumPopup(m_Type);
+            //m_Type = (ParameterType)EditorGUILayout.EnumPopup(m_Type);
 
-            switch (m_Type)
+            switch (m_Parameter.Type)
             {
                 case ParameterType.Bool:
                     try
@@ -61,7 +54,10 @@ namespace NodeEditorFramework
                     break;
             }
 
-            GUILayout.EndArea();
+            //GUILayout.EndArea();
+
         }
+
+        public bool Evaluate() => m_Parameter == null || m_Value == m_Parameter.Value;
     }
 }

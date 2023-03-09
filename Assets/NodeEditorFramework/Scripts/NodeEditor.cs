@@ -1,7 +1,7 @@
 using System;
 
 using UnityEditor;
-using UnityEditor.MemoryProfiler;
+using UnityEditor.Profiling.Memory.Experimental;
 using UnityEngine;
 
 namespace NodeEditorFramework
@@ -32,6 +32,7 @@ namespace NodeEditorFramework
 
         private NodeConnectionPoint m_SelectedInConnectionPoint, m_SelectedOutConnectionPoint;
 
+        private NodeConnection m_SelectedNodeConnection; 
 
         private Vector2 m_offset;
         private Vector2 m_drag;
@@ -191,6 +192,9 @@ namespace NodeEditorFramework
             {
                 CreateNewNodeCanvas();
             }
+
+            if (m_SelectedNodeConnection)
+                m_SelectedNodeConnection.DisplayConditions(new Rect(SideWindowRect.position + Vector2.up * 300, SideWindowRect.size));
             //knobSize = EditorGUILayout.IntSlider(new GUIContent("Handle Size", "The size of the handles of the Node Inputs/Outputs"), knobSize, 8, 32);
         }
 
@@ -209,6 +213,21 @@ namespace NodeEditorFramework
             }
         }
 
+        public void OnClickNodeConnection(NodeConnection connection)
+        {
+            m_SelectedNodeConnection = connection;
+        }
+
+        public void OnClickAddCondition(NodeConnection connection)
+        {
+            if(m_LoadedNodeCanvas.ParametersCount == 0) 
+                return;
+
+            NodeEditorParameter param = m_LoadedNodeCanvas.GetParameter(0);
+            ConnectionCondition condition = new ConnectionCondition(param, default);
+
+            connection.AddCondition(condition);
+        }
 
 
         private void OnGUI()
@@ -221,7 +240,10 @@ namespace NodeEditorFramework
 
 
             if (m_LoadedNodeCanvas)
+            {
                 m_LoadedNodeCanvas.ProcessNodeEvents(Event.current);
+                //m_LoadedNodeCanvas.Proces
+            }
 
             ProcessEvents(Event.current);
 
@@ -237,6 +259,7 @@ namespace NodeEditorFramework
             m_sideWindowWidth = Math.Min(600, Math.Max(200, (int)(position.width / 5)));
             GUILayout.BeginArea(SideWindowRect, m_NodeBox);
             DrawSideWindow();
+
             GUILayout.EndArea();
 
             GUILayout.BeginArea(ParameterWindowRect, m_NodeBox);
@@ -259,7 +282,6 @@ namespace NodeEditorFramework
                 case EventType.MouseDown:
                     if (e.button == 1)
                         ProcessContextMenu(e.mousePosition);
-
 
                     break;
 
@@ -371,6 +393,8 @@ namespace NodeEditorFramework
         {
             m_SelectedInConnectionPoint = null;
             m_SelectedOutConnectionPoint = null;
+
+            m_SelectedNodeConnection = null;
         }
 
         private void DrawGrid(float gridSpacing, float gridOpacity, Color gridColor)
