@@ -1,4 +1,6 @@
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace NodeEditorFramework
@@ -13,9 +15,15 @@ namespace NodeEditorFramework
         public int NodeConnectionsCount => m_NodesConnections == null ? 0 : m_NodesConnections.Count;
         public NodeConnection GetNodeConnection(int ind) => m_NodesConnections[ind];
 
-        private List<NodeEditorParameter> m_Parameters;
+
+        // TODO: Optimise to use only Hashtable
+
+        private Hashtable m_Parameters;
         public int ParametersCount => m_Parameters == null ? 0 : m_Parameters.Count;
-        public NodeEditorParameter GetParameter(int ind) => m_Parameters[ind];
+        public NodeEditorParameter GetParameter(string name) => (NodeEditorParameter)m_Parameters[name];
+        private List<string> m_ParameterNames;
+        //public NodeEditorParameter GetParameter(int ind) => m_Parameters[m_Parameters.Keys[ind]];
+        public NodeEditorParameter GetFirst() => ParametersCount == 0 ? null : (NodeEditorParameter)m_Parameters[m_ParameterNames[0]];
 
         public void AddNode(Node node)
         {
@@ -56,10 +64,59 @@ namespace NodeEditorFramework
             
         }
 
+
+        // TODO: Make more efficient (try to call once until name is fully changed);
+        public void ChangeParametersName(string oldName, string newName)
+        {
+            if (!m_Parameters.ContainsKey(oldName))
+                return;
+
+            NodeEditorParameter param = (NodeEditorParameter)m_Parameters[oldName];
+            m_Parameters.Remove(oldName);
+            m_Parameters.Add(newName, param);
+
+            m_ParameterNames.Remove(oldName);
+            m_ParameterNames.Add(newName);
+        }
+
         public void AddParameter(NodeEditorParameter parameter)
         {
-            m_Parameters ??= new List<NodeEditorParameter>();
-            m_Parameters.Add(parameter);
+            m_Parameters ??= new Hashtable();
+            m_ParameterNames ??= new List<string>();
+
+            if (m_Parameters.ContainsKey(parameter.Name))
+            {
+                Debug.LogError("Already have parameter with name : " + parameter.Name);
+                return;
+            }
+
+            m_Parameters.Add(parameter.Name, parameter);
+            m_ParameterNames.Add(parameter.Name);
+
+            //m_Parameters.get
+        }
+
+        public bool ContainsParameter(string name) => m_Parameters.ContainsKey(name);
+        
+        public void DisplayParameters(Rect rect)
+        {
+            GUILayout.Label(new GUIContent("Parameters"), NodeEditor.Instance.m_NodeLabelBold);
+            if (m_Parameters == null) 
+                return;
+
+            //for(int i = 0; i < ParametersCount; i++)
+            //{
+            //    NodeEditorParameter param = (NodeEditorParameter)m_Parameters[m_ParametersNames[i]];
+            //    param.Display(rect);
+            //}
+
+
+            for(int i = 0; i < m_Parameters.Count; i++)
+            {
+                NodeEditorParameter param = (NodeEditorParameter)m_Parameters[m_ParameterNames[i]];
+                param.Display(rect);
+                rect.position += Vector2.up * 100;
+            }
         }
     }
 }

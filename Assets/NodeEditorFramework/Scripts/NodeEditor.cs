@@ -204,13 +204,7 @@ namespace NodeEditorFramework
                 return;
 
             Rect rect = new Rect(Vector2.up * 100, new Vector2(m_sideWindowWidth, 100));
-
-            GUILayout.Label(new GUIContent("Parameters"), m_NodeLabelBold);
-            for (int i = 0; i < m_LoadedNodeCanvas.ParametersCount; i++)
-            {
-                m_LoadedNodeCanvas.GetParameter(i).Display(rect);
-                rect.position += Vector2.up * 100;
-            }
+            m_LoadedNodeCanvas.DisplayParameters(rect);
         }
 
         public void OnClickNodeConnection(NodeConnection connection)
@@ -223,7 +217,7 @@ namespace NodeEditorFramework
             if(m_LoadedNodeCanvas.ParametersCount == 0 || connection == null) 
                 return;
 
-            NodeEditorParameter param = m_LoadedNodeCanvas.GetParameter(0);
+            NodeEditorParameter param = m_LoadedNodeCanvas.GetFirst();
             ConnectionCondition condition = new ConnectionCondition(param, default);
 
             connection.AddCondition(condition);
@@ -328,7 +322,7 @@ namespace NodeEditorFramework
         {
             if (!m_LoadedNodeCanvas)
                 return;
-            m_LoadedNodeCanvas.AddParameter(new NodeEditorParameter(ParameterType.Bool, (object)false));
+            m_LoadedNodeCanvas.AddParameter(new NodeEditorParameter(ParameterType.Bool, (object)false, "Parameter"));
         }
 
         public void OnClickAddNode(Vector2 position, string type)
