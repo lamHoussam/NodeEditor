@@ -40,23 +40,16 @@ namespace NodeEditorFramework
         }
 
 
-        public void DisplayConditions(Rect startRect)
+        public void DisplayConditions()
         {
-            Rect rect = startRect;
-
             GUILayout.Label(new GUIContent("Condition"), NodeEditor.Instance.m_NodeLabelBold);
-            if (m_Conditions != null)
-            {
-                for (int i = 0; i < m_Conditions.Count; i++)
-                {
-                    m_Conditions[i].Display(rect);
-                    rect.position += Vector2.up * 100;
-                }
-
-            }
-
-            if (GUILayout.Button(new GUIContent("New Condition", "Creates a new Connection condition")))
+            if (GUILayout.Button("New Condition"))
                 NodeEditor.Instance.OnClickAddCondition(this);
+
+
+            if (m_Conditions != null)
+                for (int i = 0; i < m_Conditions.Count; i++)
+                    m_Conditions[i].Display();
         }
 
         public void AddCondition(ConnectionCondition cndition)

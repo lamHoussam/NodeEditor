@@ -193,9 +193,9 @@ namespace NodeEditorFramework
                 CreateNewNodeCanvas();
             }
 
+
             if (m_SelectedNodeConnection)
-                m_SelectedNodeConnection.DisplayConditions(new Rect(SideWindowRect.position + Vector2.up * 300, SideWindowRect.size));
-            //knobSize = EditorGUILayout.IntSlider(new GUIContent("Handle Size", "The size of the handles of the Node Inputs/Outputs"), knobSize, 8, 32);
+                m_SelectedNodeConnection.DisplayConditions();
         }
 
         public void DrawParametersWindow()
@@ -220,7 +220,7 @@ namespace NodeEditorFramework
 
         public void OnClickAddCondition(NodeConnection connection)
         {
-            if(m_LoadedNodeCanvas.ParametersCount == 0) 
+            if(m_LoadedNodeCanvas.ParametersCount == 0 || connection == null) 
                 return;
 
             NodeEditorParameter param = m_LoadedNodeCanvas.GetParameter(0);
@@ -265,7 +265,6 @@ namespace NodeEditorFramework
             GUILayout.BeginArea(ParameterWindowRect, m_NodeBox);
             DrawParametersWindow();
             GUILayout.EndArea();
-            
 
             if (GUI.changed)
                 Repaint();

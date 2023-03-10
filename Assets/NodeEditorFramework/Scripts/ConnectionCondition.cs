@@ -14,7 +14,7 @@ namespace NodeEditorFramework
             m_Value = value;
         }
 
-        public void Display(Rect rect)
+        public void Display()
         {
             if (m_Parameter == null)
                 return;
