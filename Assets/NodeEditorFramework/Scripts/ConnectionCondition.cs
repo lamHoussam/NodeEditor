@@ -56,10 +56,25 @@ namespace NodeEditorFramework
                     break;
             }
 
+            GUILayout.Label(Evaluate().ToString());
             //GUILayout.EndArea();
 
         }
 
-        public bool Evaluate() => m_Parameter == null || m_Value == m_Parameter.Value;
+        public bool Evaluate()
+        {
+            if (m_Parameter == null)
+                return true;
+            switch (m_Parameter.Type)
+            {
+                case ParameterType.Bool:
+                    return ((bool)m_Value) == ((bool)m_Parameter.Value);
+                case ParameterType.Int:
+                    return ((int)m_Value) == ((int)m_Parameter.Value);
+                default:
+                    break;
+            }
+            return true;
+        }
     }
 }

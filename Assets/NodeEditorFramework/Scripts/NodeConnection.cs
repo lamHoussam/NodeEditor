@@ -29,7 +29,7 @@ namespace NodeEditorFramework
                 m_OutPoint.Center,
                 m_InPoint.Center + Vector2.left * 50f,
                 m_OutPoint.Center - Vector2.left * 50f,
-                Color.white,
+                EvaluateConditions() ? new Color(0, .5f, .8f) : Color.white,
                 null,
                 2f
             );
@@ -62,6 +62,9 @@ namespace NodeEditorFramework
 
         public bool EvaluateConditions()
         {
+            if (m_Conditions == null)
+                return false;
+
             for(int i = 0; i < m_Conditions.Count; i++)
                 if (!m_Conditions[i].Evaluate()) 
                     return false;
