@@ -20,7 +20,9 @@ namespace NodeEditorFramework
                 return;
 
             //GUILayout.BeginArea(rect, NodeEditor.Instance.m_NodeBox);
-            GUILayout.Label("Parameter");
+            //GUILayout.Label("Parameter");
+
+            GUILayout.Label(m_Parameter.Name);
 
             //m_Type = (ParameterType)EditorGUILayout.EnumPopup(m_Type);
 

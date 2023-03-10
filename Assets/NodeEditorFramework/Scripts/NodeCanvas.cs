@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace NodeEditorFramework
 {
-    public class NodeCanvas : ScriptableObject 
+    public class NodeCanvas : ScriptableObject
     {
         private List<Node> m_Nodes;
         public int NodeCount => m_Nodes == null ? 0 : m_Nodes.Count;
@@ -61,7 +61,7 @@ namespace NodeEditorFramework
 
         public void Evaluate()
         {
-            
+
         }
 
 
@@ -97,11 +97,11 @@ namespace NodeEditorFramework
         }
 
         public bool ContainsParameter(string name) => m_Parameters.ContainsKey(name);
-        
+
         public void DisplayParameters(Rect rect)
         {
             GUILayout.Label(new GUIContent("Parameters"), NodeEditor.Instance.m_NodeLabelBold);
-            if (m_Parameters == null) 
+            if (m_Parameters == null)
                 return;
 
             //for(int i = 0; i < ParametersCount; i++)
@@ -111,12 +111,21 @@ namespace NodeEditorFramework
             //}
 
 
-            for(int i = 0; i < m_Parameters.Count; i++)
+            for (int i = 0; i < m_Parameters.Count; i++)
             {
                 NodeEditorParameter param = (NodeEditorParameter)m_Parameters[m_ParameterNames[i]];
                 param.Display(rect);
                 rect.position += Vector2.up * 100;
             }
         }
+
+        public T GetValue<T>(string name) => ((NodeEditorParameter)m_Parameters[name]).GetValue<T>();
+        public bool GetBool(string name) => ((NodeEditorParameter)m_Parameters[name]).GetBool();
+        public int GetInt(string name) => ((NodeEditorParameter)m_Parameters[name]).GetInt();
+
+
+        public void SetValue<T>(string name, T value) => ((NodeEditorParameter)m_Parameters[name]).SetValue<T>(value);
+        public void SetBool(string name, bool value) => ((NodeEditorParameter)m_Parameters[name]).SetBool(value);
+        public void SetInt(string name, int value) => ((NodeEditorParameter)m_Parameters[name]).SetInt(value);
     }
 }
