@@ -8,6 +8,7 @@ namespace NodeEditorFramework
     public class NodeCanvas : ScriptableObject
     {
         private List<Node> m_Nodes;
+        public EntryNode Entry => NodeCount == 0 ? null : (EntryNode)m_Nodes[0];
         public int NodeCount => m_Nodes == null ? 0 : m_Nodes.Count;
         public Node GetNode(int ind) => m_Nodes[ind];
 
@@ -21,6 +22,8 @@ namespace NodeEditorFramework
         private Hashtable m_Parameters;
         public int ParametersCount => m_Parameters == null ? 0 : m_Parameters.Count;
         public NodeEditorParameter GetParameter(string name) => (NodeEditorParameter)m_Parameters[name];
+        public NodeEditorParameter GetParameter(int ind) => (NodeEditorParameter)m_Parameters[GetParameterName(ind)];
+        public string GetParameterName(int ind) => m_ParameterNames[ind];
         private List<string> m_ParameterNames;
         //public NodeEditorParameter GetParameter(int ind) => m_Parameters[m_Parameters.Keys[ind]];
         public NodeEditorParameter GetFirst() => ParametersCount == 0 ? null : (NodeEditorParameter)m_Parameters[m_ParameterNames[0]];

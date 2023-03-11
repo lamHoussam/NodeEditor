@@ -82,6 +82,9 @@ namespace NodeEditorFramework
 
             m_isInitialised = true;
 
+            
+            if(m_LoadedNodeCanvas.Entry == null)
+                OnClickAddNode(new Vector2(Instance.position.width / 2, Instance.position.height / 2), "EntryNode");
         }
 
 
@@ -94,7 +97,9 @@ namespace NodeEditorFramework
             m_Instance.minSize = new Vector2(800, 600);
 
             if (Instance.LoadedNodeCanvas == null)
+            {
                 Instance.CreateNewNodeCanvas();
+            }
 
             //m_Instance.Init();
             Instance.m_scale = 1;
@@ -336,7 +341,9 @@ namespace NodeEditorFramework
                 case "StateNode":
                     StateNode.Create(new Rect(position, new Vector2(200, 50)));
                     break;
-
+                case "EntryNode":
+                    EntryNode.Create(new Rect(position, new Vector2(200, 50)));
+                    break;
                 default:
                     break;
             }

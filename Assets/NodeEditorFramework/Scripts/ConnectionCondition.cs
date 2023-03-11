@@ -19,13 +19,8 @@ namespace NodeEditorFramework
             if (m_Parameter == null)
                 return;
 
-            //GUILayout.BeginArea(rect, NodeEditor.Instance.m_NodeBox);
-            //GUILayout.Label("Parameter");
 
             GUILayout.Label(m_Parameter.Name);
-
-            //m_Type = (ParameterType)EditorGUILayout.EnumPopup(m_Type);
-
             switch (m_Parameter.Type)
             {
                 case ParameterType.Bool:

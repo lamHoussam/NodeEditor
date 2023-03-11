@@ -46,6 +46,11 @@ namespace NodeEditorFramework
             if (GUILayout.Button("New Condition"))
                 NodeEditor.Instance.OnClickAddCondition(this);
 
+            //if (GUILayout.Button("Parameters Popup", GUILayout.Width(200)))
+            //{
+            //    PopupWindow.Show(GUILayoutUtility.GetLastRect(), new ParametersPopup());
+            //}
+
 
             if (m_Conditions != null)
                 for (int i = 0; i < m_Conditions.Count; i++)
