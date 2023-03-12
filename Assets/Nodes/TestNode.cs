@@ -17,11 +17,11 @@ namespace NodeEditorFramework
             node.name = "Camera Logic";
             node.m_Rect = rect;
 
-            node.m_InConnection = CreateInstance<NodeConnectionPoint>();
-            node.m_OutConnection = CreateInstance<NodeConnectionPoint>();
+            //node.m_InConnection = CreateInstance<NodeConnectionPoint>();
+            //node.m_OutConnection = CreateInstance<NodeConnectionPoint>();
 
-            node.m_InConnection.SetNodeConnection(node, NodeConnectionType.In);
-            node.m_OutConnection.SetNodeConnection(node, NodeConnectionType.Out);
+            //node.m_InConnection.SetNodeConnection(node, NodeConnectionType.In);
+            //node.m_OutConnection.SetNodeConnection(node, NodeConnectionType.Out);
 
             //NodeInput.Create(node, "myValue", typeof(int));
 

@@ -22,6 +22,7 @@ namespace NodeEditorFramework
         public GUIStyle m_SelectedNodeBase;
         public GUIStyle m_NodeBox;
         public GUIStyle m_NodeLabelBold;
+        public GUIStyle m_EvaluatedNodeResult;
         public GUIStyle m_KnobStyle;
 
         public static GUIStyle m_NodeButton;
@@ -30,7 +31,8 @@ namespace NodeEditorFramework
         public Rect SideWindowRect => new Rect(position.width - m_sideWindowWidth, 0, m_sideWindowWidth, position.height);
         public Rect ParameterWindowRect => new Rect(0, 0, m_sideWindowWidth, position.height);
 
-        private NodeConnectionPoint m_SelectedInConnectionPoint, m_SelectedOutConnectionPoint;
+        //private NodeConnectionPoint m_SelectedInConnectionPoint, m_SelectedOutConnectionPoint;
+        private Node m_SelectedNodeForConnection;
 
         private NodeConnection m_SelectedNodeConnection; 
 
@@ -62,6 +64,10 @@ namespace NodeEditorFramework
             m_SelectedNodeBase.normal.textColor = new Color(1, 1, 1);
             m_SelectedNodeBase.alignment = TextAnchor.MiddleCenter;
 
+            m_EvaluatedNodeResult = new GUIStyle(GUI.skin.box);
+            m_EvaluatedNodeResult.normal.background = ColorToTex(new Color(0, .5f, .8f));
+            m_EvaluatedNodeResult.normal.textColor = new Color(.8f, .7f, 1);
+            m_EvaluatedNodeResult.alignment = TextAnchor.MiddleCenter;
 
             m_NodeBox = new GUIStyle(m_NodeBase);
             m_NodeBox.margin = new RectOffset(8, 8, 5, 8);
@@ -159,8 +165,8 @@ namespace NodeEditorFramework
                 Node node = m_LoadedNodeCanvas.GetNode(nodeCnt);
                 AssetDatabase.AddObjectToAsset(node, m_LoadedNodeCanvas);
 
-                AssetDatabase.AddObjectToAsset(node.InConnection, node);
-                AssetDatabase.AddObjectToAsset(node.OutConnection, node);
+                //AssetDatabase.AddObjectToAsset(node.InConnection, node);
+                //AssetDatabase.AddObjectToAsset(node.OutConnection, node);
 
             }
 
@@ -196,6 +202,31 @@ namespace NodeEditorFramework
             if (GUILayout.Button(new GUIContent("New Canvas", "Creates a new Canvas (remember to save the previous one to a referenced Canvas Asset File at least once before! Else it'll be lost!)")))
             {
                 CreateNewNodeCanvas();
+            }
+
+            if (GUILayout.Button(new GUIContent("Evaluate")))
+            {
+                //CreateNewNodeCanvas();
+                Node node = LoadedNodeCanvas.Evaluate();
+                if (node != null)
+                {
+                    //Debug.Log("Found node : " + node.ToString());
+                    try
+                    {
+                        StateNode sNode = (StateNode)node;
+                        if (sNode)
+                        {
+                            Debug.Log(sNode.Settings.Value);
+                        }
+                    }
+                    catch (Exception)
+                    {
+
+                    }
+                    Debug.Log(node.GetType());
+                    node.SetEvaluationResult();
+                }
+                //GUILayout.TextField(node.ToString());
             }
 
 
@@ -349,50 +380,64 @@ namespace NodeEditorFramework
             }
         }
 
-        public void OnClickInPoint(NodeConnectionPoint connectionPoint)
+        public void OnClickFirstNodeForConnection(Node fromNode)
         {
-            m_SelectedInConnectionPoint = connectionPoint;
-
-            if (m_SelectedOutConnectionPoint == null)
-                return;
-
-            if (m_SelectedOutConnectionPoint.BodyNode != m_SelectedInConnectionPoint.BodyNode)
-                CreateConnection();
-
-            ClearConnectionSelection();
-
+            m_SelectedNodeForConnection = fromNode;
         }
 
-        public void OnClickOutPoint(NodeConnectionPoint connectionPoint)
-        {
-            m_SelectedOutConnectionPoint = connectionPoint;
+        //public void OnClickNode()
+        //{
 
-            if (m_SelectedInConnectionPoint == null)
-                return;
+        //}
 
-            if (m_SelectedOutConnectionPoint.BodyNode != m_SelectedInConnectionPoint.BodyNode)
-                CreateConnection();
+        //public void OnClickInPoint(NodeConnectionPoint connectionPoint)
+        //{
+        //    m_SelectedInConnectionPoint = connectionPoint;
 
-            ClearConnectionSelection();
+        //    if (m_SelectedOutConnectionPoint == null)
+        //        return;
 
-        }
+        //    if (m_SelectedOutConnectionPoint.BodyNode != m_SelectedInConnectionPoint.BodyNode)
+        //        CreateConnection();
 
-        public void CreateConnection()
+        //    ClearConnectionSelection();
+
+        //}
+
+        //public void OnClickOutPoint(NodeConnectionPoint connectionPoint)
+        //{
+        //    m_SelectedOutConnectionPoint = connectionPoint;
+
+        //    if (m_SelectedInConnectionPoint == null)
+        //        return;
+
+        //    if (m_SelectedOutConnectionPoint.BodyNode != m_SelectedInConnectionPoint.BodyNode)
+        //        CreateConnection();
+
+        //    ClearConnectionSelection();
+
+        //}
+
+        public void CreateConnection(Node toNode)
         {
             //if (m_LoadedLogic)
             //    m_LoadedLogic.AddConnection(new Connection(m_SelectedInPoint, m_SelectedOutPoint));
-            if (m_LoadedNodeCanvas)
+            if (m_LoadedNodeCanvas && m_SelectedNodeForConnection)
             {
                 NodeConnection connection = CreateInstance<NodeConnection>();
-                connection.SetNodeConnectionPoints(m_SelectedInConnectionPoint, m_SelectedOutConnectionPoint);
+                connection.SetNodeConnectionPoints(m_SelectedNodeForConnection, toNode);
+
+                m_SelectedNodeForConnection.AddConnection(connection);
                 m_LoadedNodeCanvas.AddNodeConnection(connection);
+
+                ClearConnectionSelection();
             }
         }
 
         public void ClearConnectionSelection()
         {
-            m_SelectedInConnectionPoint = null;
-            m_SelectedOutConnectionPoint = null;
+            m_SelectedNodeForConnection = null;
+            //m_SelectedOutConnectionPoint = null;
 
             m_SelectedNodeConnection = null;
         }

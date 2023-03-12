@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: efc13d39c0a6f6544b66e33154e2ea04, type: 3}
-  m_Name: Settings
+  m_Name: Settings 1
   m_EditorClassIdentifier: 
-  m_value: 1
+  m_value: 2
   m_title: TestSettings

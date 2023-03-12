@@ -62,9 +62,18 @@ namespace NodeEditorFramework
 
         public void RemoveNodeConnection(NodeConnection nodeConnection) => m_NodesConnections?.Remove(nodeConnection);
 
-        public void Evaluate()
+        public Node Evaluate()
         {
 
+            Node node = Entry;
+            Node next = node.GetNextNode();
+            while (next != null)
+            {
+                node = next;
+                next = next.GetNextNode();
+            }
+
+            return node;
         }
 
 

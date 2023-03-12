@@ -12,12 +12,15 @@ namespace NodeEditorFramework
         public Vector2 Size => m_Rect.size;
         public float Width => m_Rect.width;
         public float Height => m_Rect.height;
+        public Vector2 Center => m_Rect.center;
 
-        protected NodeConnectionPoint m_InConnection;
-        protected NodeConnectionPoint m_OutConnection;
+        private List<NodeConnection> m_Connections;
 
-        public NodeConnectionPoint InConnection => m_InConnection;
-        public NodeConnectionPoint OutConnection => m_OutConnection;
+        //protected NodeConnectionPoint m_InConnection;
+        //protected NodeConnectionPoint m_OutConnection;
+
+        //public NodeConnectionPoint InConnection => m_InConnection;
+        //public NodeConnectionPoint OutConnection => m_OutConnection;
 
         //private List<NodeConnection> m_InConnections = new List<NodeConnection>();
         //public NodeConnection GetInConnection(int ind) => m_InConnections[ind];
@@ -29,11 +32,12 @@ namespace NodeEditorFramework
 
         protected bool m_isSelected;
         protected bool m_isDragged;
+        protected bool m_isEvaluationResult;
 
         public virtual void Draw()
         {
-            m_InConnection.Draw();
-            m_OutConnection.Draw();
+            //m_InConnection.Draw();
+            //m_OutConnection.Draw();
         }
 
         public virtual void OnRemove()
@@ -69,6 +73,7 @@ namespace NodeEditorFramework
                             GUI.changed = true;
 
                             m_isSelected = true;
+                            NodeEditor.Instance.CreateConnection(this);
                         }
                         else
                         {
@@ -79,7 +84,7 @@ namespace NodeEditorFramework
 
                     if (e.button == 1 && m_isSelected && m_Rect.Contains(e.mousePosition))
                     {
-                        //ProcessContextMenu();
+                        ProcessContextMenu();
                         e.Use();
                     }
 
@@ -103,6 +108,25 @@ namespace NodeEditorFramework
         }
 
 
+        public void ProcessContextMenu()
+        {
+            GenericMenu genericMenu = new GenericMenu();
+            genericMenu.AddItem(new GUIContent("Make Connection"), false, () => OnClickMakeConnection());
+            genericMenu.ShowAsContext();
+
+        }
+
+        public void OnClickMakeConnection()
+        {
+            NodeEditor.Instance.OnClickFirstNodeForConnection(this);
+        }
+
+        public void AddConnection(NodeConnection connection)
+        {
+            m_Connections ??= new List<NodeConnection>();
+            m_Connections.Add(connection);
+        }
+
         protected void Init()
         {
             NodeEditor.Instance.LoadedNodeCanvas.AddNode(this);
@@ -110,13 +134,34 @@ namespace NodeEditorFramework
             {
                 AssetDatabase.AddObjectToAsset(this, NodeEditor.Instance.LoadedNodeCanvas);
 
-                AssetDatabase.AddObjectToAsset(m_InConnection, this);
-                AssetDatabase.AddObjectToAsset(m_OutConnection, this);
+                //AssetDatabase.AddObjectToAsset(m_InConnection, this);
+                //AssetDatabase.AddObjectToAsset(m_OutConnection, this);
 
                 //AssetDatabase.ImportAsset(Node_Editor.editor.openedCanvasPath);
                 AssetDatabase.Refresh();
             }
         }
 
+        public Node GetNextNode()
+        {
+            //NodeConnection cnx = m_OutConnection.GetFirstTrueConnection();
+            if (m_Connections == null)
+                return null;
+
+            for(int i = 0; i < m_Connections.Count; i++)
+            {
+                if (m_Connections[i].EvaluateConditions())
+                {
+                    return m_Connections[i].To;
+                }
+            }
+
+            return null;
+        }
+
+        public void SetEvaluationResult(bool evaluationResult = true)
+        {
+            m_isEvaluationResult = evaluationResult;
+        }
     }
 }
