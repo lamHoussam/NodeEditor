@@ -1,3 +1,4 @@
+using System;
 using UnityEditor;
 using UnityEngine;
 
@@ -19,8 +20,23 @@ namespace NodeEditorFramework
             if (m_Parameter == null)
                 return;
 
+            NodeCanvas cnv = NodeEditor.Instance.LoadedNodeCanvas;
+            int paramCount = cnv.ParametersCount;
 
-            GUILayout.Label(m_Parameter.Name);
+            string[] choices = new string[paramCount];
+            int currentIndx = 0;
+
+            for(int i = 0; i < paramCount; i++)
+            {
+                choices[i] = cnv.GetParameterName(i);
+                if (choices[i] == m_Parameter.Name)
+                    currentIndx = i;
+            }
+
+            int chosenParamNameIndx = EditorGUILayout.Popup(currentIndx, choices);
+
+            m_Parameter = cnv.GetParameter(chosenParamNameIndx);
+
             switch (m_Parameter.Type)
             {
                 case ParameterType.Bool:

@@ -385,39 +385,6 @@ namespace NodeEditorFramework
             m_SelectedNodeForConnection = fromNode;
         }
 
-        //public void OnClickNode()
-        //{
-
-        //}
-
-        //public void OnClickInPoint(NodeConnectionPoint connectionPoint)
-        //{
-        //    m_SelectedInConnectionPoint = connectionPoint;
-
-        //    if (m_SelectedOutConnectionPoint == null)
-        //        return;
-
-        //    if (m_SelectedOutConnectionPoint.BodyNode != m_SelectedInConnectionPoint.BodyNode)
-        //        CreateConnection();
-
-        //    ClearConnectionSelection();
-
-        //}
-
-        //public void OnClickOutPoint(NodeConnectionPoint connectionPoint)
-        //{
-        //    m_SelectedOutConnectionPoint = connectionPoint;
-
-        //    if (m_SelectedInConnectionPoint == null)
-        //        return;
-
-        //    if (m_SelectedOutConnectionPoint.BodyNode != m_SelectedInConnectionPoint.BodyNode)
-        //        CreateConnection();
-
-        //    ClearConnectionSelection();
-
-        //}
-
         public void CreateConnection(Node toNode)
         {
             //if (m_LoadedLogic)
