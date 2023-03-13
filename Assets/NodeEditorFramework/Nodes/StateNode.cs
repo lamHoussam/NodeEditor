@@ -11,21 +11,22 @@ public class StateNode : Node
     {
         StateNode node = CreateInstance<StateNode>();
 
+        node.m_InitialRect = rect;
         node.m_Rect = rect;
 
         node.Init();
         return node;
     }
 
-    public override void Draw()
+    public override void Draw(float scale = 1)
     {
+        base.Draw(scale);
+
         GUILayout.BeginArea(m_Rect, m_isEvaluationResult ? NodeEditor.Instance.m_EvaluatedNodeResult : NodeEditor.Instance.m_NodeBox);
 
         GUILayout.Label(m_Settings ? m_Settings.Title : "Settings");
         m_Settings = (TestSettings)EditorGUILayout.ObjectField(m_Settings, typeof(TestSettings), false);
         GUILayout.EndArea();
-
-        base.Draw();
     }
 
 }

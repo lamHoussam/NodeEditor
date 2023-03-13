@@ -10,7 +10,6 @@ namespace NodeEditorFramework
         Int,
     }
 
-    [System.Serializable]
     public class NodeEditorParameter : ScriptableObject
     {
         [SerializeField] private string m_Name;

@@ -1,28 +1,31 @@
-using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
 namespace NodeEditorFramework
 {
+    [System.Serializable]
     public abstract class Node : ScriptableObject
     {
-        protected Rect m_Rect = new Rect();
+        [SerializeField] protected Rect m_Rect;
+        [SerializeField] protected Rect m_InitialRect;
+        //public Rect InitialRect => m_InitialRect;
+
         public Vector2 Position => m_Rect.position;
         public Vector2 Size => m_Rect.size;
         public float Width => m_Rect.width;
         public float Height => m_Rect.height;
         public Vector2 Center => m_Rect.center;
 
-        private List<NodeConnection> m_Connections;
+        [SerializeField] private List<NodeConnection> m_Connections;
 
         protected bool m_isSelected;
         protected bool m_isDragged;
         protected bool m_isEvaluationResult;
 
-        public virtual void Draw()
+        public virtual void Draw(float scale = 1)
         {
-
+            m_Rect.size = m_InitialRect.size * scale;
         }
 
         public virtual void OnRemove()
@@ -126,7 +129,7 @@ namespace NodeEditorFramework
         protected void Init()
         {
             NodeEditor.Instance.LoadedNodeCanvas.AddNode(this);
-            if (!String.IsNullOrEmpty(AssetDatabase.GetAssetPath(NodeEditor.Instance.LoadedNodeCanvas)))
+            if (!System.String.IsNullOrEmpty(AssetDatabase.GetAssetPath(NodeEditor.Instance.LoadedNodeCanvas)))
             {
                 AssetDatabase.AddObjectToAsset(this, NodeEditor.Instance.LoadedNodeCanvas);
 

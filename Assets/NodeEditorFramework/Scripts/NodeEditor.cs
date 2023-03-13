@@ -52,6 +52,8 @@ namespace NodeEditorFramework
 
         public void Init()
         {
+            m_scale = 1;
+
             m_NodeBase = new GUIStyle(GUI.skin.box);
             m_NodeBase.normal.background = ColorToTex(new Color(0.5f, 0.5f, 0.5f));
             m_NodeBase.normal.textColor = new Color(0.7f, 0.7f, 0.7f);
@@ -113,6 +115,10 @@ namespace NodeEditorFramework
         public void CreateNewNodeCanvas()
         {
             m_LoadedNodeCanvas = CreateInstance<NodeCanvas>();
+
+            if (m_LoadedNodeCanvas.Entry == null)
+                OnClickAddNode(new Vector2(Instance.position.width / 2, Instance.position.height / 2), "EntryNode");
+
         }
 
         public void LoadNodeCanvas(string path)
@@ -128,10 +134,15 @@ namespace NodeEditorFramework
             { // We only have to search for the Node Canvas itself in the mess, because it still hold references to all of it's nodes and their connections
                 object obj = objects[cnt];
                 if (obj.GetType() == typeof(NodeCanvas))
+                {
                     newNodeCanvas = obj as NodeCanvas;
+                    m_LoadedNodeCanvas.LoadHashtable();
+                }
             }
             if (newNodeCanvas == null)
+            {
                 return;
+            }
             m_LoadedNodeCanvas = newNodeCanvas;
 
             string[] folders = path.Split(new char[] { '/' }, System.StringSplitOptions.None);
@@ -158,17 +169,25 @@ namespace NodeEditorFramework
                 return;
             }
             AssetDatabase.CreateAsset(m_LoadedNodeCanvas, path);
+
             for (int nodeCnt = 0; nodeCnt < m_LoadedNodeCanvas.NodeCount; nodeCnt++)
             {
                 Node node = m_LoadedNodeCanvas.GetNode(nodeCnt);
                 AssetDatabase.AddObjectToAsset(node, m_LoadedNodeCanvas);
             }
 
-            for(int i = 0; i < m_LoadedNodeCanvas.NodeConnectionsCount; i++)
+            for (int i = 0; i < m_LoadedNodeCanvas.NodeConnectionsCount; i++)
             {
                 NodeConnection cnx = m_LoadedNodeCanvas.GetNodeConnection(i);
                 AssetDatabase.AddObjectToAsset(cnx, m_LoadedNodeCanvas);
             }
+
+            m_LoadedNodeCanvas.SaveHashtable();
+
+            //for (int i = 0; i < m_LoadedNodeCanvas.ParametersCount; i++)
+            //{
+            //    AssetDatabase.AddObjectToAsset(m_LoadedNodeCanvas.GetParameter(i), this);
+            //}
 
             string[] folders = path.Split(new char[] { '/' }, System.StringSplitOptions.None);
             m_openedCanvas = folders[^1];
@@ -270,12 +289,12 @@ namespace NodeEditorFramework
             DrawGrid(20, .2f, Color.gray);
             DrawGrid(100, .2f, Color.gray);
 
-
-            if (m_LoadedNodeCanvas)
-            {
-                m_LoadedNodeCanvas.ProcessNodeEvents(Event.current);
-                //m_LoadedNodeCanvas.Proces
-            }
+            m_LoadedNodeCanvas.ProcessNodeEvents(Event.current);
+            //if (m_LoadedNodeCanvas)
+            //{
+            //    m_LoadedNodeCanvas.ProcessNodeEvents(Event.current);
+            //    //m_LoadedNodeCanvas.Proces
+            //}
 
             ProcessEvents(Event.current);
 
@@ -364,7 +383,8 @@ namespace NodeEditorFramework
 
         public void OnScroll(float delta)
         {
-            m_scale += delta * Time.deltaTime;
+            float val = m_scale + delta * Time.deltaTime * .01f;
+            m_scale = Mathf.Clamp(val, .2f, 4);
             GUI.changed = true;
         }
 

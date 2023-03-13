@@ -12,17 +12,18 @@ namespace NodeEditorFramework
 
             node.name = "Camera Logic";
             node.m_Rect = rect;
+            node.m_InitialRect = rect;
 
             node.Init();
             return node;
         }
 
-        public override void Draw()
+        public override void Draw(float scale = 1)
         {
+            base.Draw(scale);
             Rect boxRect = new Rect(Position, Size);
 
             GUI.Box(boxRect, name, m_isSelected ? NodeEditor.Instance.m_SelectedNodeBase : NodeEditor.Instance.m_NodeBase);
-            base.Draw();
 
         }
     }

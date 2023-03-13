@@ -7,7 +7,7 @@ namespace NodeEditorFramework
 {
     public class NodeConnection : ScriptableObject
     {
-        private Node m_From, m_To;
+        [SerializeField] private Node m_From, m_To;
         public Node From => m_From;
         public Node To => m_To;
 

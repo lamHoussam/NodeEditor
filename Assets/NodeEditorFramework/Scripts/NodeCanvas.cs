@@ -1,6 +1,7 @@
+using Newtonsoft.Json;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using UnityEngine;
 
 namespace NodeEditorFramework
@@ -27,6 +28,25 @@ namespace NodeEditorFramework
         [SerializeField] private List<string> m_ParameterNames;
         //public NodeEditorParameter GetParameter(int ind) => m_Parameters[m_Parameters.Keys[ind]];
         public NodeEditorParameter GetFirst() => ParametersCount == 0 ? null : (NodeEditorParameter)m_Parameters[m_ParameterNames[0]];
+
+        public void OnCreate()
+        {
+            //m_Parameters = new Hashtable();
+        }
+
+        public void SaveHashtable()
+        {
+            // Serialize the hashtable to JSON and save it to a file
+            string json = JsonConvert.SerializeObject(m_Parameters, Formatting.Indented);
+            File.WriteAllText(Application.persistentDataPath + "/hashtable.json", json);
+        }
+
+        public void LoadHashtable()
+        {
+            // Load the hashtable from the file and deserialize it from JSON
+            string loadedJson = File.ReadAllText(Application.persistentDataPath + "/hashtable.json");
+            m_Parameters = JsonConvert.DeserializeObject<Hashtable>(loadedJson);
+        }
 
         public void AddNode(Node node)
         {
@@ -108,6 +128,7 @@ namespace NodeEditorFramework
             if (!m_Parameters.ContainsKey(oldName))
                 return;
 
+
             NodeEditorParameter param = (NodeEditorParameter)m_Parameters[oldName];
             m_Parameters.Remove(oldName);
             m_Parameters.Add(newName, param);
@@ -139,7 +160,10 @@ namespace NodeEditorFramework
         {
             GUILayout.Label(new GUIContent("Parameters"), NodeEditor.Instance.m_NodeLabelBold);
             if (m_Parameters == null)
+            {
+                Debug.Log("No parameters");
                 return;
+            }
 
             for (int i = 0; i < m_Parameters.Count; i++)
             {
