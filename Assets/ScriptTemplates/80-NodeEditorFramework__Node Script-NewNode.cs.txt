@@ -1,0 +1,33 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using NodeEditorFramework;
+
+public class #SCRIPTNAME# : Node
+{
+    #region Members
+    #endregion Members
+	
+    public static #SCRIPTNAME# Create(Rect rect)
+    {
+        #SCRIPTNAME# node = CreateInstance<#SCRIPTNAME#>();
+
+        node.m_Rect = rect;
+        node.Init();
+
+        return node;
+        #NOTRIM#
+    }
+
+    public override void Draw()
+    {
+        #NOTRIM#
+        GUILayout.BeginArea(m_Rect, m_isEvaluationResult ? NodeEditor.Instance.m_EvaluatedNodeResult : NodeEditor.Instance.m_NodeBox);
+        base.Draw();
+    }
+    
+    public override void OnRemove()
+    {
+        #NOTRIM#
+    }
+}
