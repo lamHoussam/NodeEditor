@@ -13,14 +13,6 @@ namespace NodeEditorFramework
 
             node.m_Rect = rect;
 
-            //node.m_InConnection = CreateInstance<NodeConnectionPoint>();
-            //node.m_OutConnection = CreateInstance<NodeConnectionPoint>();
-
-            //node.m_InConnection.SetNodeConnection(node, NodeConnectionType.In);
-            //node.m_OutConnection.SetNodeConnection(node, NodeConnectionType.Out);
-
-            //NodeInput.Create(node, "myValue", typeof(int));
-
             node.Init();
             return node;
         }

@@ -17,14 +17,6 @@ namespace NodeEditorFramework
             node.name = "Camera Logic";
             node.m_Rect = rect;
 
-            //node.m_InConnection = CreateInstance<NodeConnectionPoint>();
-            //node.m_OutConnection = CreateInstance<NodeConnectionPoint>();
-
-            //node.m_InConnection.SetNodeConnection(node, NodeConnectionType.In);
-            //node.m_OutConnection.SetNodeConnection(node, NodeConnectionType.Out);
-
-            //NodeInput.Create(node, "myValue", typeof(int));
-
             node.Init();
             return node;
         }
@@ -35,8 +27,6 @@ namespace NodeEditorFramework
 
             GUI.Box(boxRect, name, m_isSelected ? NodeEditor.Instance.m_SelectedNodeBase : NodeEditor.Instance.m_NodeBase);
             base.Draw();
-            //Rect rect = new Rect(Position + Vector2.up * (Height - 5), Size);
-            //GUI.Box(rect, "Settings", NodeEditor.Instance.DefaultNodeStyle);
 
         }
     }

@@ -47,11 +47,6 @@ namespace NodeEditorFramework
                 if (guiChanged)
                     GUI.changed = true;
             }
-
-            //for(int i = m_NodesConnections.Count - 1; i >= 0; i--)
-            //{
-
-            //}
         }
 
         public void AddNodeConnection(NodeConnection nodeConnection)
@@ -115,13 +110,6 @@ namespace NodeEditorFramework
             GUILayout.Label(new GUIContent("Parameters"), NodeEditor.Instance.m_NodeLabelBold);
             if (m_Parameters == null)
                 return;
-
-            //for(int i = 0; i < ParametersCount; i++)
-            //{
-            //    NodeEditorParameter param = (NodeEditorParameter)m_Parameters[m_ParametersNames[i]];
-            //    param.Display(rect);
-            //}
-
 
             for (int i = 0; i < m_Parameters.Count; i++)
             {

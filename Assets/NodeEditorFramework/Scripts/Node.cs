@@ -16,28 +16,13 @@ namespace NodeEditorFramework
 
         private List<NodeConnection> m_Connections;
 
-        //protected NodeConnectionPoint m_InConnection;
-        //protected NodeConnectionPoint m_OutConnection;
-
-        //public NodeConnectionPoint InConnection => m_InConnection;
-        //public NodeConnectionPoint OutConnection => m_OutConnection;
-
-        //private List<NodeConnection> m_InConnections = new List<NodeConnection>();
-        //public NodeConnection GetInConnection(int ind) => m_InConnections[ind];
-        //public int InConnectionsCount => m_InConnections.Count; 
-
-        //private List<NodeConnection> m_OutConnections = new List<NodeConnection>();
-        //public NodeConnection GetOutConnection(int ind) => m_OutConnections[ind];
-        //public int OutConnectionsCount => m_OutConnections.Count;
-
         protected bool m_isSelected;
         protected bool m_isDragged;
         protected bool m_isEvaluationResult;
 
         public virtual void Draw()
         {
-            //m_InConnection.Draw();
-            //m_OutConnection.Draw();
+
         }
 
         public virtual void OnRemove()
@@ -137,17 +122,13 @@ namespace NodeEditorFramework
                 for (int i = 0; i < m_Connections.Count; i++)
                     AssetDatabase.AddObjectToAsset(m_Connections[i], this);
 
-                //AssetDatabase.AddObjectToAsset(m_InConnection, this);
-                //AssetDatabase.AddObjectToAsset(m_OutConnection, this);
-
-                //AssetDatabase.ImportAsset(Node_Editor.editor.openedCanvasPath);
                 AssetDatabase.Refresh();
             }
         }
 
         public Node GetNextNode()
         {
-            //NodeConnection cnx = m_OutConnection.GetFirstTrueConnection();
+
             if (m_Connections == null)
                 return null;
 

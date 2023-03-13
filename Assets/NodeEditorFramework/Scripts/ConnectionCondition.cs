@@ -68,8 +68,6 @@ namespace NodeEditorFramework
             }
 
             GUILayout.Label(Evaluate().ToString());
-            //GUILayout.EndArea();
-
         }
 
         public bool Evaluate()
