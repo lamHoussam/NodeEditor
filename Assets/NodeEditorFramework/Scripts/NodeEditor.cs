@@ -373,6 +373,13 @@ namespace NodeEditorFramework
             connection.OnRemove();
         }
 
+        public void OnClickRemoveCondition(ConnectionCondition condition) {
+            if (!m_SelectedNodeConnection)
+                return;
+
+            m_SelectedNodeConnection.RemoveCondition(condition);
+        }
+
         public void OnClickAddNode(Vector2 position, string type)
         {
             switch (type)

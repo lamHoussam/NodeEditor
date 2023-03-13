@@ -1,4 +1,3 @@
-using System;
 using UnityEditor;
 using UnityEngine;
 
@@ -68,6 +67,10 @@ namespace NodeEditorFramework
             }
 
             GUILayout.Label(Evaluate().ToString());
+
+            if (GUILayout.Button("Remove Condition")) {
+                NodeEditor.Instance.OnClickRemoveCondition(this);
+            }
         }
 
         public bool Evaluate()

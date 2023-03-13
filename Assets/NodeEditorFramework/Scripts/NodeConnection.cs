@@ -61,6 +61,14 @@ namespace NodeEditorFramework
             m_Conditions.Add(cndition);
         }
 
+        public void RemoveCondition(ConnectionCondition cndition)
+        {
+            if (m_Conditions == null)
+                return;
+
+            m_Conditions.Remove(cndition);
+        }
+
         public bool EvaluateConditions()
         {
             if (m_Conditions == null)
