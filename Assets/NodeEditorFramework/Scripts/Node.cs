@@ -27,6 +27,10 @@ namespace NodeEditorFramework
 
         public virtual void OnRemove()
         {
+            for(int i = 0; i < m_Connections.Count; i++)
+            {
+
+            }
         }
 
         public virtual void OnDrag(Vector2 delta)
@@ -110,6 +114,11 @@ namespace NodeEditorFramework
         {
             m_Connections ??= new List<NodeConnection>();
             m_Connections.Add(connection);
+        }
+
+        public void RemoveConnection(NodeConnection connection)
+        {
+            m_Connections?.Remove(connection);
         }
 
         protected void Init()

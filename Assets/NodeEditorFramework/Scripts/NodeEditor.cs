@@ -361,6 +361,18 @@ namespace NodeEditorFramework
             m_LoadedNodeCanvas.AddParameter(new NodeEditorParameter(ParameterType.Bool, (object)false, "Parameter"));
         }
 
+        public void OnClickRemoveNode(Node node)
+        {
+            node.OnRemove();
+            
+        }
+
+        public void OnClickRemoveNodeConnection(NodeConnection connection)
+        {
+            m_LoadedNodeCanvas.RemoveNodeConnection(connection);
+            connection.OnRemove();
+        }
+
         public void OnClickAddNode(Vector2 position, string type)
         {
             switch (type)

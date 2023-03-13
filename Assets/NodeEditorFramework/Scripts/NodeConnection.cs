@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-//using System.Drawing;
 using UnityEditor;
 using UnityEngine;
 
@@ -33,17 +32,19 @@ namespace NodeEditorFramework
                 2f
             );
 
-            if (Handles.Button(m_To.Center, Quaternion.identity, 4, 8, Handles.RectangleHandleCap))
+            if (Handles.Button(m_To.Center, Quaternion.identity, 4, 8, Handles.CircleHandleCap))
                 Debug.Log("Houssam");
 
             if (Handles.Button((m_From.Center + m_To.Center) * 0.5f, Quaternion.identity, 4, 8, Handles.RectangleHandleCap))
                 NodeEditor.Instance.OnClickNodeConnection(this);
-
         }
 
 
         public void DisplayConditions()
         {
+            if (GUILayout.Button("Remove Node Connection"))
+                NodeEditor.Instance.OnClickRemoveNodeConnection(this);
+
             GUILayout.Label(new GUIContent("Condition"), NodeEditor.Instance.m_NodeLabelBold);
             if (GUILayout.Button("New Condition"))
                 NodeEditor.Instance.OnClickAddCondition(this);
@@ -70,6 +71,12 @@ namespace NodeEditorFramework
                     return false;
 
             return true;
+        }
+
+        public void OnRemove()
+        {
+            m_Conditions?.Clear();
+            m_From.RemoveConnection(this);
         }
     }
 }
