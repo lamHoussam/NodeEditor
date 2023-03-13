@@ -33,7 +33,32 @@ namespace NodeEditorFramework
             m_Nodes ??= new List<Node>();
             m_Nodes.Add(node);
         }
-        public void RemoveNode(Node node) => m_Nodes?.Remove(node);
+        public void RemoveNode(Node node)
+        {
+            if(m_NodesConnections != null)
+            {
+                int initCount = m_NodesConnections.Count;
+
+                List<NodeConnection> cnxsToRemove = new List<NodeConnection>();
+
+                for(int i = 0; i < initCount; i++)
+                {
+                    if (m_NodesConnections[i].From == node || m_NodesConnections[i].To == node)
+                    {
+                        Debug.Log(m_NodesConnections[i]);
+                        cnxsToRemove.Add(m_NodesConnections[i]);
+                    }
+                }
+
+                for(int i = 0; i < cnxsToRemove.Count; i++)
+                    m_NodesConnections.Remove(cnxsToRemove[i]);
+
+                //cnxsToRemove = null;
+            }
+
+
+            m_Nodes?.Remove(node);
+        }
 
         public void ProcessNodeEvents(Event e)
         {
@@ -56,6 +81,11 @@ namespace NodeEditorFramework
         }
 
         public void RemoveNodeConnection(NodeConnection nodeConnection) => m_NodesConnections?.Remove(nodeConnection);
+
+        public void RemoveNodeConnections(ICollection<NodeConnection> connections)
+        {
+
+        }
 
         public Node Evaluate()
         {

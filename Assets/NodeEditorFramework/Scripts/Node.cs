@@ -27,10 +27,11 @@ namespace NodeEditorFramework
 
         public virtual void OnRemove()
         {
-            for(int i = 0; i < m_Connections.Count; i++)
-            {
+            //if (m_Connections == null)
+            //    return; 
 
-            }
+            //for(int i = 0; i < m_Connections.Count; i++)
+            //    NodeEditor.Instance.OnClickRemoveNodeConnection(m_Connections[i]);
         }
 
         public virtual void OnDrag(Vector2 delta)
@@ -101,6 +102,7 @@ namespace NodeEditorFramework
         {
             GenericMenu genericMenu = new GenericMenu();
             genericMenu.AddItem(new GUIContent("Make Connection"), false, () => OnClickMakeConnection());
+            genericMenu.AddItem(new GUIContent("Remove Node"), false, () => NodeEditor.Instance.OnClickRemoveNode(this));
             genericMenu.ShowAsContext();
 
         }

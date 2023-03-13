@@ -363,8 +363,8 @@ namespace NodeEditorFramework
 
         public void OnClickRemoveNode(Node node)
         {
+            m_LoadedNodeCanvas.RemoveNode(node);
             node.OnRemove();
-            
         }
 
         public void OnClickRemoveNodeConnection(NodeConnection connection)
