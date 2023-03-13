@@ -422,6 +422,9 @@ namespace NodeEditorFramework
         {
             //if (m_LoadedLogic)
             //    m_LoadedLogic.AddConnection(new Connection(m_SelectedInPoint, m_SelectedOutPoint));
+            if (toNode.GetType() == typeof(EntryNode) || toNode == m_SelectedNodeForConnection)
+                return;
+
             if (m_LoadedNodeCanvas && m_SelectedNodeForConnection)
             {
                 NodeConnection connection = CreateInstance<NodeConnection>();

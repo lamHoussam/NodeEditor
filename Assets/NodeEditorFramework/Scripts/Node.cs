@@ -134,6 +134,9 @@ namespace NodeEditorFramework
             {
                 AssetDatabase.AddObjectToAsset(this, NodeEditor.Instance.LoadedNodeCanvas);
 
+                for (int i = 0; i < m_Connections.Count; i++)
+                    AssetDatabase.AddObjectToAsset(m_Connections[i], this);
+
                 //AssetDatabase.AddObjectToAsset(m_InConnection, this);
                 //AssetDatabase.AddObjectToAsset(m_OutConnection, this);
 
@@ -149,12 +152,8 @@ namespace NodeEditorFramework
                 return null;
 
             for(int i = 0; i < m_Connections.Count; i++)
-            {
                 if (m_Connections[i].EvaluateConditions())
-                {
                     return m_Connections[i].To;
-                }
-            }
 
             return null;
         }
