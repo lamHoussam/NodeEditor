@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-8544074125527365499
+--- !u!114 &-3215776587765917211
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 32ca76c2fa32851468be4dae2fc75c52, type: 3}
-  m_Name: Camera Logic
+  m_Script: {fileID: 11500000, guid: 792d20a9a554e2b4cbc381704a422964, type: 3}
+  m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &-6763115178562115826
+--- !u!114 &-2610932996347528675
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -24,46 +24,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64d77b4d20e482e4ab1ae2d94fb004b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Settings: {fileID: 11400000, guid: a9bba1d1ca9fd2e4cbc9686f66bbad1b, type: 2}
---- !u!114 &-5096847672357479434
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 64d77b4d20e482e4ab1ae2d94fb004b7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Settings: {fileID: 11400000, guid: d8a525646c83c43488d4b40710f4a1ce, type: 2}
---- !u!114 &-3044748387922570622
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 64d77b4d20e482e4ab1ae2d94fb004b7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Settings: {fileID: 11400000, guid: 3af266bd2ba3f7642b39d4522c441a48, type: 2}
---- !u!114 &-642644949922481848
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 64d77b4d20e482e4ab1ae2d94fb004b7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Settings: {fileID: 11400000, guid: 8fbe4d4ebc451494d9fdffc40b1a5f90, type: 2}
+  m_Settings: {fileID: 0}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -76,14 +37,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4eacf421c1694c04c82a92b408cc4c21, type: 3}
   m_Name: Node Canvas
   m_EditorClassIdentifier: 
+  m_Nodes:
+  - {fileID: 8740766762338736279}
+  - {fileID: 4258682515990240037}
+  - {fileID: -2610932996347528675}
   m_NodesConnections:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
---- !u!114 &893557148566046447
+  - {fileID: 3282516448923333640}
+  - {fileID: -3215776587765917211}
+  m_ParameterNames:
+  - Parameter
+--- !u!114 &3282516448923333640
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 792d20a9a554e2b4cbc381704a422964, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &4258682515990240037
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -95,21 +70,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64d77b4d20e482e4ab1ae2d94fb004b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Settings: {fileID: 11400000, guid: 97eff6e937e4f764497802f9c95ab17f, type: 2}
---- !u!114 &4477380398612022699
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 64d77b4d20e482e4ab1ae2d94fb004b7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Settings: {fileID: 11400000, guid: ed3f827fdf5bcbb458f7c29da9ef431f, type: 2}
---- !u!114 &8382934140913530746
+  m_Settings: {fileID: 0}
+--- !u!114 &8740766762338736279
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

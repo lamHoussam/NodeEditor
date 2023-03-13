@@ -1,7 +1,6 @@
 using System;
 
 using UnityEditor;
-using UnityEditor.Profiling.Memory.Experimental;
 using UnityEngine;
 
 namespace NodeEditorFramework
@@ -160,14 +159,15 @@ namespace NodeEditorFramework
             }
             AssetDatabase.CreateAsset(m_LoadedNodeCanvas, path);
             for (int nodeCnt = 0; nodeCnt < m_LoadedNodeCanvas.NodeCount; nodeCnt++)
-            { // Add every node and every of it's inputs/outputs into the file. 
-              // Results in a big mess but there's no other way
+            {
                 Node node = m_LoadedNodeCanvas.GetNode(nodeCnt);
                 AssetDatabase.AddObjectToAsset(node, m_LoadedNodeCanvas);
+            }
 
-                //AssetDatabase.AddObjectToAsset(node.InConnection, node);
-                //AssetDatabase.AddObjectToAsset(node.OutConnection, node);
-
+            for(int i = 0; i < m_LoadedNodeCanvas.NodeConnectionsCount; i++)
+            {
+                NodeConnection cnx = m_LoadedNodeCanvas.GetNodeConnection(i);
+                AssetDatabase.AddObjectToAsset(cnx, m_LoadedNodeCanvas);
             }
 
             string[] folders = path.Split(new char[] { '/' }, System.StringSplitOptions.None);
@@ -254,7 +254,9 @@ namespace NodeEditorFramework
                 return;
 
             NodeEditorParameter param = m_LoadedNodeCanvas.GetFirst();
-            ConnectionCondition condition = new ConnectionCondition(param, default);
+            ConnectionCondition condition = CreateInstance<ConnectionCondition>();
+                
+            condition.SetConnectionCondition(param, default);
 
             connection.AddCondition(condition);
         }
@@ -301,6 +303,28 @@ namespace NodeEditorFramework
 
             // draw the nodes
             //BeginWindows();
+        }
+
+        public void Relocate()
+        {
+            //if (m_LoadedNodeCanvas == null)
+            //{
+            //    position = new Rect(Vector2.zero, position.size);
+            //    return;
+            //}
+
+            //position = new Rect(m_LoadedNodeCanvas.Entry.Position, position.size);
+
+            //m_LoadedNodeCanvas.Entry.OnDrag(-m_drag);
+            //m_drag = Vector2.zero;
+            //m_offset = Vector2.zero;
+
+            Vector2 entryOffset = m_LoadedNodeCanvas.Entry.Position - new Vector2(position.width, position.height) / 2;
+
+            for(int i = 0; i < m_LoadedNodeCanvas.NodeCount; i++)
+                m_LoadedNodeCanvas.GetNode(i).OnDrag(-entryOffset);
+
+            GUI.changed = true;
         }
 
         public void ProcessEvents(Event e)
@@ -351,6 +375,7 @@ namespace NodeEditorFramework
             genericMenu.AddItem(new GUIContent("Add Test node"), false, () => OnClickAddNode(mousePosition, "TestNode"));
             genericMenu.AddItem(new GUIContent("Add State Node"), false, () => OnClickAddNode(mousePosition, "StateNode"));
             genericMenu.AddItem(new GUIContent("Add new Parameter"), false, () => OnClickAddParameter());
+            genericMenu.AddItem(new GUIContent("Relocate"), false, () => Relocate());
             genericMenu.ShowAsContext();
         }
 
@@ -358,7 +383,11 @@ namespace NodeEditorFramework
         {
             if (!m_LoadedNodeCanvas)
                 return;
-            m_LoadedNodeCanvas.AddParameter(new NodeEditorParameter(ParameterType.Bool, (object)false, "Parameter"));
+
+            NodeEditorParameter param = CreateInstance<NodeEditorParameter>();
+            param.SetNodeEditorParameter(ParameterType.Bool, (object)false, "Parameter");
+            m_LoadedNodeCanvas.AddParameter(param);
+            //m_LoadedNodeCanvas.AddParameter(new NodeEditorParameter(ParameterType.Bool, (object)false, "Parameter"));
         }
 
         public void OnClickRemoveNode(Node node)

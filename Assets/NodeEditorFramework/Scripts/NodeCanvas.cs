@@ -7,24 +7,24 @@ namespace NodeEditorFramework
 {
     public class NodeCanvas : ScriptableObject
     {
-        private List<Node> m_Nodes;
+        [SerializeField] private List<Node> m_Nodes;
         public EntryNode Entry => NodeCount == 0 ? null : (EntryNode)m_Nodes[0];
         public int NodeCount => m_Nodes == null ? 0 : m_Nodes.Count;
         public Node GetNode(int ind) => m_Nodes[ind];
 
-        public List<NodeConnection> m_NodesConnections;
+        [SerializeField] private List<NodeConnection> m_NodesConnections;
         public int NodeConnectionsCount => m_NodesConnections == null ? 0 : m_NodesConnections.Count;
         public NodeConnection GetNodeConnection(int ind) => m_NodesConnections[ind];
 
 
         // TODO: Optimise to use only Hashtable
 
-        private Hashtable m_Parameters;
+        [SerializeField] private Hashtable m_Parameters;
         public int ParametersCount => m_Parameters == null ? 0 : m_Parameters.Count;
         public NodeEditorParameter GetParameter(string name) => (NodeEditorParameter)m_Parameters[name];
         public NodeEditorParameter GetParameter(int ind) => (NodeEditorParameter)m_Parameters[GetParameterName(ind)];
         public string GetParameterName(int ind) => m_ParameterNames[ind];
-        private List<string> m_ParameterNames;
+        [SerializeField] private List<string> m_ParameterNames;
         //public NodeEditorParameter GetParameter(int ind) => m_Parameters[m_Parameters.Keys[ind]];
         public NodeEditorParameter GetFirst() => ParametersCount == 0 ? null : (NodeEditorParameter)m_Parameters[m_ParameterNames[0]];
 

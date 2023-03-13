@@ -11,7 +11,7 @@ namespace NodeEditorFramework
     }
 
     [System.Serializable]
-    public class NodeEditorParameter 
+    public class NodeEditorParameter : ScriptableObject
     {
         [SerializeField] private string m_Name;
         public string Name => m_Name;
@@ -82,7 +82,7 @@ namespace NodeEditorFramework
             throw new InvalidCastException("Wrong type");
         }
 
-        public NodeEditorParameter(ParameterType type, object value, string name)
+        public void SetNodeEditorParameter(ParameterType type, object value, string name)
         {
             m_Name = name;
             m_Type = type;

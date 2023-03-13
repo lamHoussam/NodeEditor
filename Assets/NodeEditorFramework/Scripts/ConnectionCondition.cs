@@ -3,12 +3,12 @@ using UnityEngine;
 
 namespace NodeEditorFramework
 {
-    public class ConnectionCondition 
+    public class ConnectionCondition : ScriptableObject
     {
         [SerializeField] private NodeEditorParameter m_Parameter;
         [SerializeField] private object m_Value;
 
-        public ConnectionCondition(NodeEditorParameter parameter, object value)
+        public void SetConnectionCondition(NodeEditorParameter parameter, object value)
         {
             m_Parameter = parameter;
             m_Value = value;

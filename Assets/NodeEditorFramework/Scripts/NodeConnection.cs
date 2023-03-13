@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -18,10 +19,14 @@ namespace NodeEditorFramework
             m_To = to;
         }
 
+
         public void Draw()
         {
             //Handles.Draw
             //Handles.color = Color.blue;
+            if (m_From == null || m_To == null)
+                return;
+
             Handles.DrawBezier(
                 m_From.Center,
                 m_To.Center,
@@ -72,7 +77,7 @@ namespace NodeEditorFramework
         public bool EvaluateConditions()
         {
             if (m_Conditions == null)
-                return false;
+                return true;
 
             for(int i = 0; i < m_Conditions.Count; i++)
                 if (!m_Conditions[i].Evaluate()) 
