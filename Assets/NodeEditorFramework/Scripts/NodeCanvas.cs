@@ -1,7 +1,7 @@
-using Newtonsoft.Json;
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 
 namespace NodeEditorFramework
@@ -20,32 +20,52 @@ namespace NodeEditorFramework
 
         // TODO: Optimise to use only Hashtable
 
-        [SerializeField] private Hashtable m_Parameters;
+        [SerializeField] private List<NodeEditorParameter> m_Parameters;
         public int ParametersCount => m_Parameters == null ? 0 : m_Parameters.Count;
-        public NodeEditorParameter GetParameter(string name) => (NodeEditorParameter)m_Parameters[name];
-        public NodeEditorParameter GetParameter(int ind) => (NodeEditorParameter)m_Parameters[GetParameterName(ind)];
-        public string GetParameterName(int ind) => m_ParameterNames[ind];
-        [SerializeField] private List<string> m_ParameterNames;
-        //public NodeEditorParameter GetParameter(int ind) => m_Parameters[m_Parameters.Keys[ind]];
-        public NodeEditorParameter GetFirst() => ParametersCount == 0 ? null : (NodeEditorParameter)m_Parameters[m_ParameterNames[0]];
-
-        public void OnCreate()
+        public NodeEditorParameter GetParameter(string name)
         {
-            //m_Parameters = new Hashtable();
-        }
+            for(int i = 0; i < m_Parameters.Count; i++)
+                if (m_Parameters[i].Name.Equals(name))
+                    return m_Parameters[i];
 
+            return null;
+        }
+        public NodeEditorParameter GetParameter(int ind)
+        {
+            object obj = m_Parameters[ind];
+            //Debug.LogWarning(obj.ToString() + " : " + obj.GetType().ToString());
+            return (NodeEditorParameter)obj;
+        }
+        //public string GetParameterName(int ind) => m_ParameterNames[ind];
+        //[SerializeField] private List<string> m_ParameterNames;
+        //public NodeEditorParameter GetParameter(int ind) => m_Parameters[m_Parameters.Keys[ind]];
+        public NodeEditorParameter GetFirst() => ParametersCount == 0 ? null : m_Parameters[0];
+        
         public void SaveHashtable()
         {
-            // Serialize the hashtable to JSON and save it to a file
-            string json = JsonConvert.SerializeObject(m_Parameters, Formatting.Indented);
-            File.WriteAllText(Application.persistentDataPath + "/hashtable.json", json);
+            //string filePath = Application.persistentDataPath + "/param_hashtable.dat";
+
+            //FileStream fs = new FileStream(filePath, FileMode.Create);
+
+            //BinaryFormatter formatter = new BinaryFormatter();
+            //formatter.Serialize(fs, m_Parameters);
+
+            //fs.Close();
         }
 
         public void LoadHashtable()
         {
-            // Load the hashtable from the file and deserialize it from JSON
-            string loadedJson = File.ReadAllText(Application.persistentDataPath + "/hashtable.json");
-            m_Parameters = JsonConvert.DeserializeObject<Hashtable>(loadedJson);
+            //string filePath = Application.persistentDataPath + "/param_hashtable.dat";
+            //m_Parameters?.Clear();
+
+            //m_Parameters ??= new List<NodeEditorParameter>();
+
+            //FileStream fs = new FileStream(filePath, FileMode.Open);
+            //BinaryFormatter formatter = new BinaryFormatter();
+
+            //m_Parameters = (List<NodeEditorParameter>)formatter.Deserialize(fs);
+
+            //fs.Close();
         }
 
         public void AddNode(Node node)
@@ -125,37 +145,45 @@ namespace NodeEditorFramework
         // TODO: Make more efficient (try to call once until name is fully changed);
         public void ChangeParametersName(string oldName, string newName)
         {
-            if (!m_Parameters.ContainsKey(oldName))
+            if (!ContainsParameter(oldName))
                 return;
 
 
-            NodeEditorParameter param = (NodeEditorParameter)m_Parameters[oldName];
-            m_Parameters.Remove(oldName);
-            m_Parameters.Add(newName, param);
+            //NodeEditorParameter param = (NodeEditorParameter)m_Parameters[oldName];
+            //NodeEditorParameter param = GetParameter(oldName);
+            //m_Parameters.Remove(param);
+            //m_Parameters.Add(newName, param);
 
-            m_ParameterNames.Remove(oldName);
-            m_ParameterNames.Add(newName);
+            //m_ParameterNames.Remove(oldName);
+            //m_ParameterNames.Add(newName);
         }
 
         public void AddParameter(NodeEditorParameter parameter)
         {
-            m_Parameters ??= new Hashtable();
-            m_ParameterNames ??= new List<string>();
+            m_Parameters ??= new List<NodeEditorParameter>();
+            //m_ParameterNames ??= new List<string>();
 
-            if (m_Parameters.ContainsKey(parameter.Name))
+            if (ContainsParameter(parameter.Name))
             {
                 Debug.LogError("Already have parameter with name : " + parameter.Name);
                 return;
             }
 
-            m_Parameters.Add(parameter.Name, parameter);
-            m_ParameterNames.Add(parameter.Name);
+            m_Parameters.Add(parameter);
+            //m_ParameterNames.Add(parameter.Name);
 
             //m_Parameters.get
         }
 
-        public bool ContainsParameter(string name) => m_Parameters.ContainsKey(name);
+        public bool ContainsParameter(string name)
+        {
+            for(int i = 0; i < m_Parameters.Count; i++)
+                if (m_Parameters[i].Name.Equals(name))
+                    return true;
 
+            return false;
+        }
+        
         public void DisplayParameters(Rect rect)
         {
             GUILayout.Label(new GUIContent("Parameters"), NodeEditor.Instance.m_NodeLabelBold);
@@ -167,19 +195,22 @@ namespace NodeEditorFramework
 
             for (int i = 0; i < m_Parameters.Count; i++)
             {
-                NodeEditorParameter param = (NodeEditorParameter)m_Parameters[m_ParameterNames[i]];
+                //object pr = (object)GetParameter(i);
+                //Debug.Log(pr.ToString() + " : " + pr.GetType().ToString());
+
+                NodeEditorParameter param = (NodeEditorParameter)GetParameter(i);
                 param.Display(rect);
                 rect.position += Vector2.up * 100;
             }
         }
 
-        public T GetValue<T>(string name) => ((NodeEditorParameter)m_Parameters[name]).GetValue<T>();
-        public bool GetBool(string name) => ((NodeEditorParameter)m_Parameters[name]).GetBool();
-        public int GetInt(string name) => ((NodeEditorParameter)m_Parameters[name]).GetInt();
+        //public T GetValue<T>(string name) => ((NodeEditorParameter)m_Parameters[name]).GetValue<T>();
+        //public bool GetBool(string name) => ((NodeEditorParameter)m_Parameters[name]).GetBool();
+        //public int GetInt(string name) => ((NodeEditorParameter)m_Parameters[name]).GetInt();
 
 
-        public void SetValue<T>(string name, T value) => ((NodeEditorParameter)m_Parameters[name]).SetValue<T>(value);
-        public void SetBool(string name, bool value) => ((NodeEditorParameter)m_Parameters[name]).SetBool(value);
-        public void SetInt(string name, int value) => ((NodeEditorParameter)m_Parameters[name]).SetInt(value);
+        //public void SetValue<T>(string name, T value) => ((NodeEditorParameter)m_Parameters[name]).SetValue<T>(value);
+        //public void SetBool(string name, bool value) => ((NodeEditorParameter)m_Parameters[name]).SetBool(value);
+        //public void SetInt(string name, int value) => ((NodeEditorParameter)m_Parameters[name]).SetInt(value);
     }
 }

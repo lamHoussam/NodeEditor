@@ -136,7 +136,6 @@ namespace NodeEditorFramework
                 if (obj.GetType() == typeof(NodeCanvas))
                 {
                     newNodeCanvas = obj as NodeCanvas;
-                    m_LoadedNodeCanvas.LoadHashtable();
                 }
             }
             if (newNodeCanvas == null)
@@ -144,6 +143,7 @@ namespace NodeEditorFramework
                 return;
             }
             m_LoadedNodeCanvas = newNodeCanvas;
+            m_LoadedNodeCanvas.LoadHashtable();
 
             string[] folders = path.Split(new char[] { '/' }, System.StringSplitOptions.None);
             m_openedCanvas = folders[^1];
@@ -182,7 +182,28 @@ namespace NodeEditorFramework
                 AssetDatabase.AddObjectToAsset(cnx, m_LoadedNodeCanvas);
             }
 
+            for(int i = 0; i < m_LoadedNodeCanvas.ParametersCount; i++)
+            {
+                NodeEditorParameter param = m_LoadedNodeCanvas.GetParameter(i);
+                AssetDatabase.AddObjectToAsset(param, m_LoadedNodeCanvas);
+            }
+
             m_LoadedNodeCanvas.SaveHashtable();
+
+            for(int i = 0; i < m_LoadedNodeCanvas.NodeConnectionsCount; i++)
+            {
+                NodeConnection cnx = m_LoadedNodeCanvas.GetNodeConnection(i);
+                //cnx.SetDirty();
+                EditorUtility.SetDirty(cnx);
+
+                for (int j = 0; j < cnx.ConditionsCount; j++)
+                {
+                    ConnectionCondition cnd = cnx.GetCondition(j);
+                    AssetDatabase.AddObjectToAsset(cnd, cnx);
+
+                }
+
+            }
 
             //for (int i = 0; i < m_LoadedNodeCanvas.ParametersCount; i++)
             //{
@@ -274,8 +295,18 @@ namespace NodeEditorFramework
 
             NodeEditorParameter param = m_LoadedNodeCanvas.GetFirst();
             ConnectionCondition condition = CreateInstance<ConnectionCondition>();
-                
-            condition.SetConnectionCondition(param, default);
+
+            switch (param.Type)
+            {
+                case ParameterType.Bool:
+                    condition.SetConnectionCondition(param, false);
+                    break;
+                case ParameterType.Int:
+                    condition.SetConnectionCondition(param, 0);
+                    break;
+                default:
+                    break;
+            }
 
             connection.AddCondition(condition);
         }

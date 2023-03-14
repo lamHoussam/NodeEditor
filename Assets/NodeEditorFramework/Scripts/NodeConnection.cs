@@ -1,17 +1,20 @@
-using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
 namespace NodeEditorFramework
 {
+    [System.Serializable]
     public class NodeConnection : ScriptableObject
     {
         [SerializeField] private Node m_From, m_To;
         public Node From => m_From;
         public Node To => m_To;
 
-        private List<ConnectionCondition> m_Conditions;
+        [SerializeField] private List<ConnectionCondition> m_Conditions;
+        public int ConditionsCount => m_Conditions.Count;
+        public ConnectionCondition GetCondition(int i) => m_Conditions[i];
+
 
         public void SetNodeConnectionPoints(Node from, Node to)
         {

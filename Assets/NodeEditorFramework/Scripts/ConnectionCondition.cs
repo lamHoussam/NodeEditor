@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace NodeEditorFramework
 {
+    [System.Serializable]
     public class ConnectionCondition : ScriptableObject
     {
         [SerializeField] private NodeEditorParameter m_Parameter;
@@ -25,9 +26,9 @@ namespace NodeEditorFramework
             string[] choices = new string[paramCount];
             int currentIndx = 0;
 
-            for(int i = 0; i < paramCount; i++)
+            for (int i = 0; i < paramCount; i++)
             {
-                choices[i] = cnv.GetParameterName(i);
+                choices[i] = cnv.GetParameter(i).Name;
                 if (choices[i] == m_Parameter.Name)
                     currentIndx = i;
             }
@@ -68,7 +69,8 @@ namespace NodeEditorFramework
 
             GUILayout.Label(Evaluate().ToString());
 
-            if (GUILayout.Button("Remove Condition")) {
+            if (GUILayout.Button("Remove Condition"))
+            {
                 NodeEditor.Instance.OnClickRemoveCondition(this);
             }
         }

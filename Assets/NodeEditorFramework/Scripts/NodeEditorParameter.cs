@@ -10,10 +10,11 @@ namespace NodeEditorFramework
         Int,
     }
 
+    [System.Serializable]
     public class NodeEditorParameter : ScriptableObject
     {
-        [SerializeField] private string m_Name;
-        public string Name => m_Name;
+        [SerializeField] private string m_ParamName;
+        public string Name => m_ParamName;
 
         [SerializeField] private ParameterType m_Type;
         public ParameterType Type => m_Type;
@@ -23,7 +24,7 @@ namespace NodeEditorFramework
 
         public T GetValue<T>()
         {
-            if(typeof(T) == m_Value.GetType())
+            if (typeof(T) == m_Value.GetType())
                 return (T)m_Value;
 
             Debug.LogError("Wrong type");
@@ -59,7 +60,7 @@ namespace NodeEditorFramework
 
         public void SetBool(bool newValue)
         {
-            if(m_Type == ParameterType.Bool)
+            if (m_Type == ParameterType.Bool)
             {
                 m_Value = newValue;
                 return;
@@ -71,7 +72,7 @@ namespace NodeEditorFramework
 
         public void SetInt(int newValue)
         {
-            if(m_Type == ParameterType.Int)
+            if (m_Type == ParameterType.Int)
             {
                 m_Value = newValue;
                 return;
@@ -83,7 +84,7 @@ namespace NodeEditorFramework
 
         public void SetNodeEditorParameter(ParameterType type, object value, string name)
         {
-            m_Name = name;
+            m_ParamName = name;
             m_Type = type;
             m_Value = value;
         }
@@ -95,7 +96,7 @@ namespace NodeEditorFramework
             return !NodeEditor.Instance.LoadedNodeCanvas.ContainsParameter(newName);
         }
 
-        
+
 
         public void Display(Rect rect)
         {
@@ -104,8 +105,8 @@ namespace NodeEditorFramework
             //GUILayout.Label(Name);
             if (CheckCanUseName(newName))
             {
-                NodeEditor.Instance.LoadedNodeCanvas.ChangeParametersName(m_Name, newName);
-                m_Name = newName;
+                NodeEditor.Instance.LoadedNodeCanvas.ChangeParametersName(m_ParamName, newName);
+                m_ParamName = newName;
             }
 
             m_Type = (ParameterType)EditorGUILayout.EnumPopup(m_Type);
