@@ -1,5 +1,5 @@
 using System;
-
+using System.IO;
 using UnityEditor;
 using UnityEngine;
 
@@ -164,11 +164,20 @@ namespace NodeEditorFramework
                 if (existingPath != path)
                 {
                     AssetDatabase.CopyAsset(existingPath, path);
+                    //AssetDatabase.
                     LoadNodeCanvas(path);
                 }
                 return;
             }
+            
             AssetDatabase.CreateAsset(m_LoadedNodeCanvas, path);
+
+            for (int i = 0; i < m_LoadedNodeCanvas.NodeConnectionsCount; i++)
+            {
+                NodeConnection cnx = m_LoadedNodeCanvas.GetNodeConnection(i);
+                AssetDatabase.AddObjectToAsset(cnx, m_LoadedNodeCanvas);
+
+            }
 
             for (int nodeCnt = 0; nodeCnt < m_LoadedNodeCanvas.NodeCount; nodeCnt++)
             {
@@ -176,11 +185,6 @@ namespace NodeEditorFramework
                 AssetDatabase.AddObjectToAsset(node, m_LoadedNodeCanvas);
             }
 
-            for (int i = 0; i < m_LoadedNodeCanvas.NodeConnectionsCount; i++)
-            {
-                NodeConnection cnx = m_LoadedNodeCanvas.GetNodeConnection(i);
-                AssetDatabase.AddObjectToAsset(cnx, m_LoadedNodeCanvas);
-            }
 
             for(int i = 0; i < m_LoadedNodeCanvas.ParametersCount; i++)
             {
@@ -194,7 +198,7 @@ namespace NodeEditorFramework
             {
                 NodeConnection cnx = m_LoadedNodeCanvas.GetNodeConnection(i);
                 //cnx.SetDirty();
-                EditorUtility.SetDirty(cnx);
+                //EditorUtility.SetDirty(cnx);
 
                 for (int j = 0; j < cnx.ConditionsCount; j++)
                 {
@@ -225,7 +229,7 @@ namespace NodeEditorFramework
             //GUILayout.Label(new GUIContent("Do note that changes will be saved automatically!", "All changes are automatically saved to the currently opened canvas (see above) if it's present in the Project view."), m_NodeBase);
             if (GUILayout.Button(new GUIContent("Save Canvas", "Saves the canvas as a new Canvas Asset File in the Assets Folder")))
             {
-                SaveNodeCanvas(EditorUtility.SaveFilePanelInProject("Save Node Canvas", "Node Canvas", "asset", "Saving to a file is only needed once.", m_editorPath + "Saves/"));
+                SaveNodeCanvas(EditorUtility.SaveFilePanelInProject("Save Node Canvas", "NodeCanvas", "asset", "Saving to a file is only needed once.", m_editorPath + "Saves/"));
             }
             if (GUILayout.Button(new GUIContent("Load Canvas", "Loads the canvas from a Canvas Asset File in the Assets Folder")))
             {
@@ -295,18 +299,15 @@ namespace NodeEditorFramework
 
             NodeEditorParameter param = m_LoadedNodeCanvas.GetFirst();
             ConnectionCondition condition = CreateInstance<ConnectionCondition>();
+            condition.SetConnectionCondition(param, false);
 
-            switch (param.Type)
-            {
-                case ParameterType.Bool:
-                    condition.SetConnectionCondition(param, false);
-                    break;
-                case ParameterType.Int:
-                    condition.SetConnectionCondition(param, 0);
-                    break;
-                default:
-                    break;
-            }
+            //switch (param.Type)
+            //{
+            //    case ParameterType.Bool:
+            //        break;
+            //    default:
+            //        break;
+            //}
 
             connection.AddCondition(condition);
         }
@@ -436,7 +437,7 @@ namespace NodeEditorFramework
                 return;
 
             NodeEditorParameter param = CreateInstance<NodeEditorParameter>();
-            param.SetNodeEditorParameter(ParameterType.Bool, (object)false, "Parameter");
+            param.SetNodeEditorParameter(false, "Parameter");
             m_LoadedNodeCanvas.AddParameter(param);
             //m_LoadedNodeCanvas.AddParameter(new NodeEditorParameter(ParameterType.Bool, (object)false, "Parameter"));
         }

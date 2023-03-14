@@ -12,14 +12,30 @@ namespace NodeEditorFramework
         public Node To => m_To;
 
         [SerializeField] private List<ConnectionCondition> m_Conditions;
-        public int ConditionsCount => m_Conditions.Count;
+        public int ConditionsCount => m_Conditions == null ? 0 : m_Conditions.Count;
         public ConnectionCondition GetCondition(int i) => m_Conditions[i];
+
 
 
         public void SetNodeConnectionPoints(Node from, Node to)
         {
             m_From = from;
             m_To = to;
+
+            //NodeEditor.Instance.LoadedNodeCanvas.AddNodeConnection(this);
+            if (!System.String.IsNullOrEmpty(AssetDatabase.GetAssetPath(NodeEditor.Instance.LoadedNodeCanvas)))
+            {
+                AssetDatabase.AddObjectToAsset(this, NodeEditor.Instance.LoadedNodeCanvas);
+
+                if (m_Conditions != null)
+                {
+                    for (int i = 0; i < m_Conditions.Count; i++)
+                        AssetDatabase.AddObjectToAsset(m_Conditions[i], this);
+                }
+
+                AssetDatabase.Refresh();
+            }
+
         }
 
 
@@ -93,6 +109,7 @@ namespace NodeEditorFramework
         {
             m_Conditions?.Clear();
             m_From.RemoveConnection(this);
-        }
+        }       
+
     }
 }

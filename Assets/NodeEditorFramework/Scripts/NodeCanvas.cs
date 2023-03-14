@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using UnityEditor;
 using UnityEngine;
 
 namespace NodeEditorFramework
@@ -170,6 +171,25 @@ namespace NodeEditorFramework
             }
 
             m_Parameters.Add(parameter);
+
+            if (!System.String.IsNullOrEmpty(AssetDatabase.GetAssetPath(this)))
+            {
+                AssetDatabase.AddObjectToAsset(parameter, this);
+                AssetDatabase.Refresh();
+            }
+
+
+            //NodeEditor.Instance.LoadedNodeCanvas.AddNode(this);
+            //if (!System.String.IsNullOrEmpty(AssetDatabase.GetAssetPath(this)))
+            //{
+            //    if (m_Parameters != null)
+            //    {
+            //        for (int i = 0; i < m_Parameters.Count; i++)
+            //            AssetDatabase.AddObjectToAsset(m_Parameters[i], this);
+            //    }
+
+            //}
+
             //m_ParameterNames.Add(parameter.Name);
 
             //m_Parameters.get
@@ -189,7 +209,7 @@ namespace NodeEditorFramework
             GUILayout.Label(new GUIContent("Parameters"), NodeEditor.Instance.m_NodeLabelBold);
             if (m_Parameters == null)
             {
-                Debug.Log("No parameters");
+                //Debug.Log("No parameters");
                 return;
             }
 

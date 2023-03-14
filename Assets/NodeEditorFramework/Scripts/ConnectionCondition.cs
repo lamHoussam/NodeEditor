@@ -7,9 +7,9 @@ namespace NodeEditorFramework
     public class ConnectionCondition : ScriptableObject
     {
         [SerializeField] private NodeEditorParameter m_Parameter;
-        [SerializeField] private object m_Value;
+        [SerializeField] private bool m_Value;
 
-        public void SetConnectionCondition(NodeEditorParameter parameter, object value)
+        public void SetConnectionCondition(NodeEditorParameter parameter, bool value)
         {
             m_Parameter = parameter;
             m_Value = value;
@@ -37,35 +37,35 @@ namespace NodeEditorFramework
 
             m_Parameter = cnv.GetParameter(chosenParamNameIndx);
 
-            switch (m_Parameter.Type)
-            {
-                case ParameterType.Bool:
-                    try
-                    {
                         m_Value = EditorGUILayout.Toggle((bool)m_Value);
+            //switch (m_Parameter.Type)
+            //{
+            //    case ParameterType.Bool:
+            //        try
+            //        {
 
-                    }
-                    catch (System.Exception)
-                    {
-                        m_Value = false;
-                    }
+            //        }
+            //        catch (System.Exception)
+            //        {
+            //            m_Value = false;
+            //        }
 
-                    break;
-                case ParameterType.Int:
-                    try
-                    {
-                        m_Value = EditorGUILayout.IntField((int)m_Value);
-                    }
-                    catch (System.Exception)
-                    {
-                        m_Value = 0;
-                    }
+            //        break;
+            //    //case ParameterType.Int:
+            //    //    try
+            //    //    {
+            //    //        m_Value = EditorGUILayout.IntField((int)m_Value);
+            //    //    }
+            //    //    catch (System.Exception)
+            //    //    {
+            //    //        m_Value = 0;
+            //    //    }
 
 
-                    break;
-                default:
-                    break;
-            }
+            //        //break;
+            //    default:
+            //        break;
+            //}
 
             GUILayout.Label(Evaluate().ToString());
 
@@ -79,16 +79,17 @@ namespace NodeEditorFramework
         {
             if (m_Parameter == null)
                 return true;
-            switch (m_Parameter.Type)
-            {
-                case ParameterType.Bool:
-                    return ((bool)m_Value) == ((bool)m_Parameter.Value);
-                case ParameterType.Int:
-                    return ((int)m_Value) == ((int)m_Parameter.Value);
-                default:
-                    break;
-            }
-            return true;
+
+            return ((bool)m_Value) == ((bool)m_Parameter.Value);
+            //switch (m_Parameter.Type)
+            //{
+            //    case ParameterType.Bool:
+            //    //case ParameterType.Int:
+            //    //    return ((int)m_Value) == ((int)m_Parameter.Value);
+            //    default:
+            //        break;
+            //}
+            //return true;
         }
     }
 }
