@@ -9,12 +9,20 @@ namespace NodeEditorFramework
         [SerializeField] private NodeEditorParameter m_Parameter;
         [SerializeField] private bool m_Value;
 
+        /// <summary>
+        /// Set condition's parameter and value to check with
+        /// </summary>
+        /// <param name="parameter">condition's parameter</param>
+        /// <param name="value">value to check</param>
         public void SetConnectionCondition(NodeEditorParameter parameter, bool value)
         {
             m_Parameter = parameter;
             m_Value = value;
         }
 
+        /// <summary>
+        /// Display condition to node editor
+        /// </summary>
         public void Display()
         {
             if (m_Parameter == null)
@@ -47,6 +55,10 @@ namespace NodeEditorFramework
             }
         }
 
+        /// <summary>
+        /// Evaluate condition
+        /// </summary>
+        /// <returns>Equality between parameter's value and condition's value</returns>
         public bool Evaluate()
         {
             if (m_Parameter == null)

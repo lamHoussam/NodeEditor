@@ -21,16 +21,30 @@ namespace NodeEditorFramework
         public bool Value => m_Value;
 
 
+        /// <summary>
+        /// Get boolean value
+        /// </summary>
+        /// <returns></returns>
         public bool GetBool()
         {
             return Value;
         }
+
+        /// <summary>
+        /// Set boolean value
+        /// </summary>
+        /// <param name="newValue"></param>
         public void SetBool(bool newValue)
         {
             m_Value = newValue;
         }
 
 
+        /// <summary>
+        /// Initialises parameter values 
+        /// </summary>
+        /// <param name="value">Parameter's value</param>
+        /// <param name="name">Parameter's name</param>
         public void SetNodeEditorParameter(bool value, string name)
         {
             m_ParamName = name;
@@ -39,6 +53,12 @@ namespace NodeEditorFramework
 
 
         // TODO: Add Regex
+
+        /// <summary>
+        /// Check if newName can be used for parameter
+        /// </summary>
+        /// <param name="newName"></param>
+        /// <returns></returns>
         public bool CheckCanUseName(string newName)
         {
             return !NodeEditor.Instance.LoadedNodeCanvas.ContainsParameter(newName);
@@ -46,6 +66,10 @@ namespace NodeEditorFramework
 
 
 
+        /// <summary>
+        /// Display parameter to Node editor window
+        /// </summary>
+        /// <param name="rect"></param>
         public void Display(Rect rect)
         {
             GUILayout.BeginArea(rect, NodeEditor.Instance.m_NodeBox);

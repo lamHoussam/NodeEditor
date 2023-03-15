@@ -48,6 +48,9 @@ namespace NodeEditorFramework
             return tex;
         }
 
+        /// <summary>
+        /// Initialise GUIStyles and Canvas entry node
+        /// </summary>
         public void Init()
         {
             m_scale = 1;
@@ -95,6 +98,9 @@ namespace NodeEditorFramework
 
 
 
+        /// <summary>
+        /// Create editor window
+        /// </summary>
         [MenuItem("Window/Node Editor")]
         private static void CreateEditor()
         {
@@ -109,6 +115,9 @@ namespace NodeEditorFramework
             Instance.m_scale = 1;
         }
 
+        /// <summary>
+        /// Create Node canvas
+        /// </summary>
         public void CreateNewNodeCanvas()
         {
             m_LoadedNodeCanvas = CreateInstance<NodeCanvas>();
@@ -118,6 +127,10 @@ namespace NodeEditorFramework
 
         }
 
+        /// <summary>
+        /// Load node canvas from path
+        /// </summary>
+        /// <param name="path"></param>
         public void LoadNodeCanvas(string path)
         {
             if (System.String.IsNullOrEmpty(path))
@@ -150,6 +163,10 @@ namespace NodeEditorFramework
         }
 
 
+        /// <summary>
+        /// Save node canvas to path
+        /// </summary>
+        /// <param name="path"></param>
         public void SaveNodeCanvas(string path)
         {
             if (System.String.IsNullOrEmpty(path))
@@ -207,6 +224,9 @@ namespace NodeEditorFramework
             Repaint();
         }
 
+        /// <summary>
+        /// Draw Side window (Save, Load, ...)
+        /// </summary>
         public void DrawSideWindow()
         {
             GUILayout.Label(new GUIContent("Node Editor (" + m_openedCanvas + ")", "The currently opened canvas in the Node Editor"), m_NodeLabelBold);
@@ -260,6 +280,9 @@ namespace NodeEditorFramework
                 m_SelectedNodeConnection.DisplayConditions();
         }
 
+        /// <summary>
+        /// Draw Parameter's window
+        /// </summary>
         public void DrawParametersWindow()
         {
             if (!m_LoadedNodeCanvas)
@@ -269,11 +292,19 @@ namespace NodeEditorFramework
             m_LoadedNodeCanvas.DisplayParameters(rect);
         }
 
+        /// <summary>
+        /// Called on node connection selection
+        /// </summary>
+        /// <param name="connection">Connection to select</param>
         public void OnClickNodeConnection(NodeConnection connection)
         {
             m_SelectedNodeConnection = connection;
         }
 
+        /// <summary>
+        /// Called on click add condtion
+        /// </summary>
+        /// <param name="connection">Node connection to add condition to</param>
         public void OnClickAddCondition(NodeConnection connection)
         {
             if(m_LoadedNodeCanvas.ParametersCount == 0 || connection == null) 
@@ -322,6 +353,9 @@ namespace NodeEditorFramework
                 Repaint();
         }
 
+        /// <summary>
+        /// Relocate canvas 
+        /// </summary>
         public void Relocate()
         {
             Vector2 entryOffset = m_LoadedNodeCanvas.Entry.Position - new Vector2(position.width, position.height) / 2;
@@ -332,6 +366,10 @@ namespace NodeEditorFramework
             GUI.changed = true;
         }
 
+        /// <summary>
+        /// Process input events on canvas
+        /// </summary>
+        /// <param name="e"></param>
         public void ProcessEvents(Event e)
         {
             m_drag = Vector2.zero;
@@ -385,6 +423,9 @@ namespace NodeEditorFramework
             genericMenu.ShowAsContext();
         }
 
+        /// <summary>
+        /// Called on click add parameter
+        /// </summary>
         public void OnClickAddParameter()
         {
             if (!m_LoadedNodeCanvas)
@@ -395,18 +436,30 @@ namespace NodeEditorFramework
             m_LoadedNodeCanvas.AddParameter(param);
         }
 
+        /// <summary>
+        /// Called on click remove node
+        /// </summary>
+        /// <param name="node">node to remove</param>
         public void OnClickRemoveNode(Node node)
         {
             m_LoadedNodeCanvas.RemoveNode(node);
             node.OnRemove();
         }
 
+        /// <summary>
+        /// Called on click remove node connection
+        /// </summary>
+        /// <param name="connection">NodeConnection to remove</param>
         public void OnClickRemoveNodeConnection(NodeConnection connection)
         {
             m_LoadedNodeCanvas.RemoveNodeConnection(connection);
             connection.OnRemove();
         }
 
+        /// <summary>
+        /// Called on click remove condition
+        /// </summary>
+        /// <param name="condition">Condition to remove</param>
         public void OnClickRemoveCondition(ConnectionCondition condition) {
             if (!m_SelectedNodeConnection)
                 return;
@@ -414,6 +467,11 @@ namespace NodeEditorFramework
             m_SelectedNodeConnection.RemoveCondition(condition);
         }
 
+        /// <summary>
+        /// Called on click add node
+        /// </summary>
+        /// <param name="position">Node's initial position</param>
+        /// <param name="type">Node type</param>
         public void OnClickAddNode(Vector2 position, string type)
         {
             switch (type)
@@ -433,11 +491,19 @@ namespace NodeEditorFramework
             }
         }
 
+        /// <summary>
+        /// Select first node to connect
+        /// </summary>
+        /// <param name="fromNode"></param>
         public void OnClickFirstNodeForConnection(Node fromNode)
         {
             m_SelectedNodeForConnection = fromNode;
         }
 
+        /// <summary>
+        /// Create connection from selected node to toNode
+        /// </summary>
+        /// <param name="toNode">Node to create connection to</param>
         public void CreateConnection(Node toNode)
         {
             if (toNode.GetType() == typeof(EntryNode) || toNode == m_SelectedNodeForConnection)
@@ -455,6 +521,9 @@ namespace NodeEditorFramework
             }
         }
 
+        /// <summary>
+        /// Clear selections
+        /// </summary>
         public void ClearConnectionSelection()
         {
             m_SelectedNodeForConnection = null;

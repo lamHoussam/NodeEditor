@@ -16,7 +16,11 @@ namespace NodeEditorFramework
         public ConnectionCondition GetCondition(int i) => m_Conditions[i];
 
 
-
+        /// <summary>
+        /// Set nodes connected to this
+        /// </summary>
+        /// <param name="from">Starting node</param>
+        /// <param name="to">Target node</param>
         public void SetNodeConnectionPoints(Node from, Node to)
         {
             m_From = from;
@@ -37,7 +41,9 @@ namespace NodeEditorFramework
 
         }
 
-
+        /// <summary>
+        /// Draw node connection to Node editor
+        /// </summary>
         public void Draw()
         {
             if (m_From == null || m_To == null)
@@ -61,6 +67,9 @@ namespace NodeEditorFramework
         }
 
 
+        /// <summary>
+        /// Display conditions to Node editor
+        /// </summary>
         public void DisplayConditions()
         {
             if (GUILayout.Button("Remove Node Connection"))
@@ -76,12 +85,20 @@ namespace NodeEditorFramework
                     m_Conditions[i].Display();
         }
 
+        /// <summary>
+        /// Add condition 
+        /// </summary>
+        /// <param name="cndition">Condition to add</param>
         public void AddCondition(ConnectionCondition cndition)
         {
             m_Conditions ??= new List<ConnectionCondition>();
             m_Conditions.Add(cndition);
         }
 
+        /// <summary>
+        /// Remove confition
+        /// </summary>
+        /// <param name="cndition">Condition to remove</param>
         public void RemoveCondition(ConnectionCondition cndition)
         {
             if (m_Conditions == null)
@@ -90,6 +107,10 @@ namespace NodeEditorFramework
             m_Conditions.Remove(cndition);
         }
 
+        /// <summary>
+        /// Evaluate all conditions in condition's list
+        /// </summary>
+        /// <returns>True if all conditions evaluate to true False else</returns>
         public bool EvaluateConditions()
         {
             if (m_Conditions == null)
@@ -102,6 +123,9 @@ namespace NodeEditorFramework
             return true;
         }
 
+        /// <summary>
+        /// Called on remove node connection
+        /// </summary>
         public void OnRemove()
         {
             m_Conditions?.Clear();

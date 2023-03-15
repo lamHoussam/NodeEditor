@@ -34,16 +34,40 @@ namespace NodeEditorFramework
             //return (NodeEditorParameter)obj;
         }
 
+        /// <summary>
+        /// Get boolean value of parameter with name param
+        /// </summary>
+        /// <param name="param">Variable's name</param>
+        /// <returns></returns>
         public bool GetBool(string param) => GetParameter(param).Value;
+
+        /// <summary>
+        /// Set boolean value of parameter with name param
+        /// </summary>
+        /// <param name="param">Parameter to change</param>
+        /// <param name="value">New Value</param>
         public void SetBool(string param, bool value) => GetParameter(param).SetBool(value);
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>First parameter null if no parameters</returns>
         public NodeEditorParameter GetFirst() => ParametersCount == 0 ? null : m_Parameters[0];
         
+        /// <summary>
+        /// Add new Node
+        /// </summary>
+        /// <param name="node">node to add</param>
         public void AddNode(Node node)
         {
             m_Nodes ??= new List<Node>();
             m_Nodes.Add(node);
         }
+
+        /// <summary>
+        /// Remove Node
+        /// </summary>
+        /// <param name="node">node to remove</param>
         public void RemoveNode(Node node)
         {
             if(m_NodesConnections != null)
@@ -83,19 +107,26 @@ namespace NodeEditorFramework
             }
         }
 
+        /// <summary>
+        /// Add node connection
+        /// </summary>
+        /// <param name="nodeConnection">Node connectin to add</param>
         public void AddNodeConnection(NodeConnection nodeConnection)
         {
             m_NodesConnections ??= new List<NodeConnection>();
             m_NodesConnections.Add(nodeConnection);
         }
 
+        /// <summary>
+        /// Remove node connection
+        /// </summary>
+        /// <param name="nodeConnection">Node connection to remove</param>
         public void RemoveNodeConnection(NodeConnection nodeConnection) => m_NodesConnections?.Remove(nodeConnection);
 
-        public void RemoveNodeConnections(ICollection<NodeConnection> connections)
-        {
-
-        }
-
+        /// <summary>
+        /// Evaluate conditions starting from Entry
+        /// </summary>
+        /// <returns>Last node such that path from Entry to node evaluates to true</returns>
         public Node Evaluate()
         {
 
@@ -110,6 +141,10 @@ namespace NodeEditorFramework
             return node;
         }
 
+        /// <summary>
+        /// Add new parameter
+        /// </summary>
+        /// <param name="parameter">Parameter to add</param>
         public void AddParameter(NodeEditorParameter parameter)
         {
             m_Parameters ??= new List<NodeEditorParameter>();
@@ -129,6 +164,11 @@ namespace NodeEditorFramework
             }
         }
 
+        /// <summary>
+        /// Checks if parameter with name exists already
+        /// </summary>
+        /// <param name="name">name to check</param>
+        /// <returns>if exists</returns>
         public bool ContainsParameter(string name)
         {
             for(int i = 0; i < m_Parameters.Count; i++)
@@ -138,6 +178,10 @@ namespace NodeEditorFramework
             return false;
         }
         
+        /// <summary>
+        /// Display to Node editor
+        /// </summary>
+        /// <param name="rect"></param>
         public void DisplayParameters(Rect rect)
         {
             GUILayout.Label(new GUIContent("Parameters"), NodeEditor.Instance.m_NodeLabelBold);

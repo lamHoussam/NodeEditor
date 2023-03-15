@@ -23,14 +23,22 @@ namespace NodeEditorFramework
         protected bool m_isDragged;
         protected bool m_isEvaluationResult;
 
+        /// <summary>
+        /// Draw Node to editor window
+        /// </summary>
+        /// <param name="scale"></param>
         public virtual void Draw(float scale = 1)
         {
             m_Rect.size = m_InitialRect.size * scale;
         }
 
+        /// <summary>
+        /// Called on remove node
+        /// </summary>
         public virtual void OnRemove()
         {
         }
+
 
         public virtual void OnDrag(Vector2 delta)
         {
@@ -105,17 +113,27 @@ namespace NodeEditorFramework
 
         }
 
+
         public void OnClickMakeConnection()
         {
             NodeEditor.Instance.OnClickFirstNodeForConnection(this);
         }
 
+
+        /// <summary>
+        /// Add Connection to node's connection list
+        /// </summary>
+        /// <param name="connection">connection to add</param>
         public void AddConnection(NodeConnection connection)
         {
             m_Connections ??= new List<NodeConnection>();
             m_Connections.Add(connection);
         }
 
+        /// <summary>
+        /// Remove Connection from node's connection list
+        /// </summary>
+        /// <param name="connection">connection to remove</param>
         public void RemoveConnection(NodeConnection connection)
         {
             m_Connections?.Remove(connection);
@@ -138,6 +156,10 @@ namespace NodeEditorFramework
             }
         }
 
+        /// <summary>
+        /// Get Next node with true connection conditions
+        /// </summary>
+        /// <returns></returns>
         public Node GetNextNode()
         {
 
