@@ -13,21 +13,24 @@ public class #SCRIPTNAME# : Node
         #SCRIPTNAME# node = CreateInstance<#SCRIPTNAME#>();
 
         node.m_Rect = rect;
+        node.m_InitialRect = rect;
+
         node.Init();
 
         return node;
         #NOTRIM#
     }
 
-    public override void Draw()
+    public override void Draw(float scale = 1)
     {
         #NOTRIM#
+        base.Draw(scale);
         GUILayout.BeginArea(m_Rect, m_isEvaluationResult ? NodeEditor.Instance.m_EvaluatedNodeResult : NodeEditor.Instance.m_NodeBox);
-        base.Draw();
     }
     
     public override void OnRemove()
     {
         #NOTRIM#
+        base.OnRemove();
     }
 }
