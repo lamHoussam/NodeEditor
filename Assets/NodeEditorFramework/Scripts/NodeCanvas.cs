@@ -33,6 +33,10 @@ namespace NodeEditorFramework
             //object obj = m_Parameters[ind];
             //return (NodeEditorParameter)obj;
         }
+
+        public bool GetBool(string param) => GetParameter(param).Value;
+        public void SetBool(string param, bool value) => GetParameter(param).SetBool(value);
+
         public NodeEditorParameter GetFirst() => ParametersCount == 0 ? null : m_Parameters[0];
         
         public void AddNode(Node node)
