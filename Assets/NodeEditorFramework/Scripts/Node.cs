@@ -30,11 +30,6 @@ namespace NodeEditorFramework
 
         public virtual void OnRemove()
         {
-            //if (m_Connections == null)
-            //    return; 
-
-            //for(int i = 0; i < m_Connections.Count; i++)
-            //    NodeEditor.Instance.OnClickRemoveNodeConnection(m_Connections[i]);
         }
 
         public virtual void OnDrag(Vector2 delta)

@@ -22,7 +22,6 @@ namespace NodeEditorFramework
             m_From = from;
             m_To = to;
 
-            //NodeEditor.Instance.LoadedNodeCanvas.AddNodeConnection(this);
             if (!System.String.IsNullOrEmpty(AssetDatabase.GetAssetPath(NodeEditor.Instance.LoadedNodeCanvas)))
             {
                 AssetDatabase.AddObjectToAsset(this, NodeEditor.Instance.LoadedNodeCanvas);
@@ -41,8 +40,6 @@ namespace NodeEditorFramework
 
         public void Draw()
         {
-            //Handles.Draw
-            //Handles.color = Color.blue;
             if (m_From == null || m_To == null)
                 return;
 

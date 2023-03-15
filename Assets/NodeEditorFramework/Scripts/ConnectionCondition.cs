@@ -37,35 +37,7 @@ namespace NodeEditorFramework
 
             m_Parameter = cnv.GetParameter(chosenParamNameIndx);
 
-                        m_Value = EditorGUILayout.Toggle((bool)m_Value);
-            //switch (m_Parameter.Type)
-            //{
-            //    case ParameterType.Bool:
-            //        try
-            //        {
-
-            //        }
-            //        catch (System.Exception)
-            //        {
-            //            m_Value = false;
-            //        }
-
-            //        break;
-            //    //case ParameterType.Int:
-            //    //    try
-            //    //    {
-            //    //        m_Value = EditorGUILayout.IntField((int)m_Value);
-            //    //    }
-            //    //    catch (System.Exception)
-            //    //    {
-            //    //        m_Value = 0;
-            //    //    }
-
-
-            //        //break;
-            //    default:
-            //        break;
-            //}
+            m_Value = EditorGUILayout.Toggle((bool)m_Value);
 
             GUILayout.Label(Evaluate().ToString());
 
@@ -81,15 +53,6 @@ namespace NodeEditorFramework
                 return true;
 
             return ((bool)m_Value) == ((bool)m_Parameter.Value);
-            //switch (m_Parameter.Type)
-            //{
-            //    case ParameterType.Bool:
-            //    //case ParameterType.Int:
-            //    //    return ((int)m_Value) == ((int)m_Parameter.Value);
-            //    default:
-            //        break;
-            //}
-            //return true;
         }
     }
 }

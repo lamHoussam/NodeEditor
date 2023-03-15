@@ -1,7 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
 using UnityEditor;
 using UnityEngine;
 
@@ -20,7 +17,6 @@ namespace NodeEditorFramework
 
 
         // TODO: Optimise to use only Hashtable
-
         [SerializeField] private List<NodeEditorParameter> m_Parameters;
         public int ParametersCount => m_Parameters == null ? 0 : m_Parameters.Count;
         public NodeEditorParameter GetParameter(string name)
@@ -33,42 +29,12 @@ namespace NodeEditorFramework
         }
         public NodeEditorParameter GetParameter(int ind)
         {
-            object obj = m_Parameters[ind];
-            //Debug.LogWarning(obj.ToString() + " : " + obj.GetType().ToString());
-            return (NodeEditorParameter)obj;
+            return m_Parameters[ind];
+            //object obj = m_Parameters[ind];
+            //return (NodeEditorParameter)obj;
         }
-        //public string GetParameterName(int ind) => m_ParameterNames[ind];
-        //[SerializeField] private List<string> m_ParameterNames;
-        //public NodeEditorParameter GetParameter(int ind) => m_Parameters[m_Parameters.Keys[ind]];
         public NodeEditorParameter GetFirst() => ParametersCount == 0 ? null : m_Parameters[0];
         
-        public void SaveHashtable()
-        {
-            //string filePath = Application.persistentDataPath + "/param_hashtable.dat";
-
-            //FileStream fs = new FileStream(filePath, FileMode.Create);
-
-            //BinaryFormatter formatter = new BinaryFormatter();
-            //formatter.Serialize(fs, m_Parameters);
-
-            //fs.Close();
-        }
-
-        public void LoadHashtable()
-        {
-            //string filePath = Application.persistentDataPath + "/param_hashtable.dat";
-            //m_Parameters?.Clear();
-
-            //m_Parameters ??= new List<NodeEditorParameter>();
-
-            //FileStream fs = new FileStream(filePath, FileMode.Open);
-            //BinaryFormatter formatter = new BinaryFormatter();
-
-            //m_Parameters = (List<NodeEditorParameter>)formatter.Deserialize(fs);
-
-            //fs.Close();
-        }
-
         public void AddNode(Node node)
         {
             m_Nodes ??= new List<Node>();
@@ -93,8 +59,6 @@ namespace NodeEditorFramework
 
                 for(int i = 0; i < cnxsToRemove.Count; i++)
                     m_NodesConnections.Remove(cnxsToRemove[i]);
-
-                //cnxsToRemove = null;
             }
 
 
@@ -142,27 +106,9 @@ namespace NodeEditorFramework
             return node;
         }
 
-
-        // TODO: Make more efficient (try to call once until name is fully changed);
-        public void ChangeParametersName(string oldName, string newName)
-        {
-            if (!ContainsParameter(oldName))
-                return;
-
-
-            //NodeEditorParameter param = (NodeEditorParameter)m_Parameters[oldName];
-            //NodeEditorParameter param = GetParameter(oldName);
-            //m_Parameters.Remove(param);
-            //m_Parameters.Add(newName, param);
-
-            //m_ParameterNames.Remove(oldName);
-            //m_ParameterNames.Add(newName);
-        }
-
         public void AddParameter(NodeEditorParameter parameter)
         {
             m_Parameters ??= new List<NodeEditorParameter>();
-            //m_ParameterNames ??= new List<string>();
 
             if (ContainsParameter(parameter.Name))
             {
@@ -177,22 +123,6 @@ namespace NodeEditorFramework
                 AssetDatabase.AddObjectToAsset(parameter, this);
                 AssetDatabase.Refresh();
             }
-
-
-            //NodeEditor.Instance.LoadedNodeCanvas.AddNode(this);
-            //if (!System.String.IsNullOrEmpty(AssetDatabase.GetAssetPath(this)))
-            //{
-            //    if (m_Parameters != null)
-            //    {
-            //        for (int i = 0; i < m_Parameters.Count; i++)
-            //            AssetDatabase.AddObjectToAsset(m_Parameters[i], this);
-            //    }
-
-            //}
-
-            //m_ParameterNames.Add(parameter.Name);
-
-            //m_Parameters.get
         }
 
         public bool ContainsParameter(string name)
@@ -208,29 +138,14 @@ namespace NodeEditorFramework
         {
             GUILayout.Label(new GUIContent("Parameters"), NodeEditor.Instance.m_NodeLabelBold);
             if (m_Parameters == null)
-            {
-                //Debug.Log("No parameters");
                 return;
-            }
 
             for (int i = 0; i < m_Parameters.Count; i++)
             {
-                //object pr = (object)GetParameter(i);
-                //Debug.Log(pr.ToString() + " : " + pr.GetType().ToString());
-
                 NodeEditorParameter param = (NodeEditorParameter)GetParameter(i);
                 param.Display(rect);
                 rect.position += Vector2.up * 100;
             }
         }
-
-        //public T GetValue<T>(string name) => ((NodeEditorParameter)m_Parameters[name]).GetValue<T>();
-        //public bool GetBool(string name) => ((NodeEditorParameter)m_Parameters[name]).GetBool();
-        //public int GetInt(string name) => ((NodeEditorParameter)m_Parameters[name]).GetInt();
-
-
-        //public void SetValue<T>(string name, T value) => ((NodeEditorParameter)m_Parameters[name]).SetValue<T>(value);
-        //public void SetBool(string name, bool value) => ((NodeEditorParameter)m_Parameters[name]).SetBool(value);
-        //public void SetInt(string name, int value) => ((NodeEditorParameter)m_Parameters[name]).SetInt(value);
     }
 }

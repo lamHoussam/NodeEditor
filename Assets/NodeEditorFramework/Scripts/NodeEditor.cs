@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using UnityEditor;
 using UnityEngine;
 
@@ -30,7 +29,6 @@ namespace NodeEditorFramework
         public Rect SideWindowRect => new Rect(position.width - m_sideWindowWidth, 0, m_sideWindowWidth, position.height);
         public Rect ParameterWindowRect => new Rect(0, 0, m_sideWindowWidth, position.height);
 
-        //private NodeConnectionPoint m_SelectedInConnectionPoint, m_SelectedOutConnectionPoint;
         private Node m_SelectedNodeForConnection;
 
         private NodeConnection m_SelectedNodeConnection; 
@@ -108,7 +106,6 @@ namespace NodeEditorFramework
                 Instance.CreateNewNodeCanvas();
             }
 
-            //m_Instance.Init();
             Instance.m_scale = 1;
         }
 
@@ -131,7 +128,7 @@ namespace NodeEditorFramework
             NodeCanvas newNodeCanvas = null;
 
             for (int cnt = 0; cnt < objects.Length; cnt++)
-            { // We only have to search for the Node Canvas itself in the mess, because it still hold references to all of it's nodes and their connections
+            {
                 object obj = objects[cnt];
                 if (obj.GetType() == typeof(NodeCanvas))
                 {
@@ -143,7 +140,6 @@ namespace NodeEditorFramework
                 return;
             }
             m_LoadedNodeCanvas = newNodeCanvas;
-            m_LoadedNodeCanvas.LoadHashtable();
 
             string[] folders = path.Split(new char[] { '/' }, System.StringSplitOptions.None);
             m_openedCanvas = folders[^1];
@@ -164,7 +160,6 @@ namespace NodeEditorFramework
                 if (existingPath != path)
                 {
                     AssetDatabase.CopyAsset(existingPath, path);
-                    //AssetDatabase.
                     LoadNodeCanvas(path);
                 }
                 return;
@@ -192,14 +187,9 @@ namespace NodeEditorFramework
                 AssetDatabase.AddObjectToAsset(param, m_LoadedNodeCanvas);
             }
 
-            m_LoadedNodeCanvas.SaveHashtable();
-
             for(int i = 0; i < m_LoadedNodeCanvas.NodeConnectionsCount; i++)
             {
                 NodeConnection cnx = m_LoadedNodeCanvas.GetNodeConnection(i);
-                //cnx.SetDirty();
-                //EditorUtility.SetDirty(cnx);
-
                 for (int j = 0; j < cnx.ConditionsCount; j++)
                 {
                     ConnectionCondition cnd = cnx.GetCondition(j);
@@ -208,12 +198,6 @@ namespace NodeEditorFramework
                 }
 
             }
-
-            //for (int i = 0; i < m_LoadedNodeCanvas.ParametersCount; i++)
-            //{
-            //    AssetDatabase.AddObjectToAsset(m_LoadedNodeCanvas.GetParameter(i), this);
-            //}
-
             string[] folders = path.Split(new char[] { '/' }, System.StringSplitOptions.None);
             m_openedCanvas = folders[^1];
             m_openedCanvasPath = path;
@@ -226,7 +210,7 @@ namespace NodeEditorFramework
         public void DrawSideWindow()
         {
             GUILayout.Label(new GUIContent("Node Editor (" + m_openedCanvas + ")", "The currently opened canvas in the Node Editor"), m_NodeLabelBold);
-            //GUILayout.Label(new GUIContent("Do note that changes will be saved automatically!", "All changes are automatically saved to the currently opened canvas (see above) if it's present in the Project view."), m_NodeBase);
+
             if (GUILayout.Button(new GUIContent("Save Canvas", "Saves the canvas as a new Canvas Asset File in the Assets Folder")))
             {
                 SaveNodeCanvas(EditorUtility.SaveFilePanelInProject("Save Node Canvas", "NodeCanvas", "asset", "Saving to a file is only needed once.", m_editorPath + "Saves/"));
@@ -250,7 +234,6 @@ namespace NodeEditorFramework
 
             if (GUILayout.Button(new GUIContent("Evaluate")))
             {
-                //CreateNewNodeCanvas();
                 Node node = LoadedNodeCanvas.Evaluate();
                 if (node != null)
                 {
@@ -270,7 +253,6 @@ namespace NodeEditorFramework
                     Debug.Log(node.GetType());
                     node.SetEvaluationResult();
                 }
-                //GUILayout.TextField(node.ToString());
             }
 
 
@@ -301,14 +283,6 @@ namespace NodeEditorFramework
             ConnectionCondition condition = CreateInstance<ConnectionCondition>();
             condition.SetConnectionCondition(param, false);
 
-            //switch (param.Type)
-            //{
-            //    case ParameterType.Bool:
-            //        break;
-            //    default:
-            //        break;
-            //}
-
             connection.AddCondition(condition);
         }
 
@@ -322,11 +296,6 @@ namespace NodeEditorFramework
             DrawGrid(100, .2f, Color.gray);
 
             m_LoadedNodeCanvas.ProcessNodeEvents(Event.current);
-            //if (m_LoadedNodeCanvas)
-            //{
-            //    m_LoadedNodeCanvas.ProcessNodeEvents(Event.current);
-            //    //m_LoadedNodeCanvas.Proces
-            //}
 
             ProcessEvents(Event.current);
 
@@ -351,25 +320,10 @@ namespace NodeEditorFramework
 
             if (GUI.changed)
                 Repaint();
-
-            // draw the nodes
-            //BeginWindows();
         }
 
         public void Relocate()
         {
-            //if (m_LoadedNodeCanvas == null)
-            //{
-            //    position = new Rect(Vector2.zero, position.size);
-            //    return;
-            //}
-
-            //position = new Rect(m_LoadedNodeCanvas.Entry.Position, position.size);
-
-            //m_LoadedNodeCanvas.Entry.OnDrag(-m_drag);
-            //m_drag = Vector2.zero;
-            //m_offset = Vector2.zero;
-
             Vector2 entryOffset = m_LoadedNodeCanvas.Entry.Position - new Vector2(position.width, position.height) / 2;
 
             for(int i = 0; i < m_LoadedNodeCanvas.NodeCount; i++)
@@ -439,7 +393,6 @@ namespace NodeEditorFramework
             NodeEditorParameter param = CreateInstance<NodeEditorParameter>();
             param.SetNodeEditorParameter(false, "Parameter");
             m_LoadedNodeCanvas.AddParameter(param);
-            //m_LoadedNodeCanvas.AddParameter(new NodeEditorParameter(ParameterType.Bool, (object)false, "Parameter"));
         }
 
         public void OnClickRemoveNode(Node node)
@@ -487,8 +440,6 @@ namespace NodeEditorFramework
 
         public void CreateConnection(Node toNode)
         {
-            //if (m_LoadedLogic)
-            //    m_LoadedLogic.AddConnection(new Connection(m_SelectedInPoint, m_SelectedOutPoint));
             if (toNode.GetType() == typeof(EntryNode) || toNode == m_SelectedNodeForConnection)
                 return;
 
@@ -507,7 +458,6 @@ namespace NodeEditorFramework
         public void ClearConnectionSelection()
         {
             m_SelectedNodeForConnection = null;
-            //m_SelectedOutConnectionPoint = null;
 
             m_SelectedNodeConnection = null;
         }
