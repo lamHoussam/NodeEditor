@@ -39,7 +39,7 @@ namespace NodeEditorFramework
         /// </summary>
         /// <param name="param">Variable's name</param>
         /// <returns></returns>
-        public bool GetBool(string param) => (bool)GetParameter(param).Value;
+        public bool GetBool(string param) => (bool)GetParameter(param).Value.BoolValue;
 
         /// <summary>
         /// Set boolean value of parameter with name param

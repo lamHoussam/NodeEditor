@@ -324,7 +324,9 @@ namespace NodeEditorFramework
 
             NodeEditorParameter param = m_LoadedNodeCanvas.GetFirst();
             ConnectionCondition condition = CreateInstance<ConnectionCondition>();
-            condition.SetConnectionCondition(param, false);
+            object defaultValue = param.Type == ParameterType.Bool ? (object)false : (object)0;
+
+            condition.SetConnectionCondition(param, defaultValue);
 
             connection.AddCondition(condition);
         }

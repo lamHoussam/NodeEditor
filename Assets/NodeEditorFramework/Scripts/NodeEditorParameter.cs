@@ -1,4 +1,5 @@
 using System;
+using System.Data.Common;
 using UnityEditor;
 using UnityEngine;
 
@@ -11,6 +12,23 @@ namespace NodeEditorFramework
         Int = 1,
     }
 
+    public struct NodeEditorParameterValue
+    {
+        private bool m_boolValue;
+        public bool BoolValue
+        {
+            get { return m_boolValue; }
+            set { m_boolValue = value; }
+        }
+
+        private int m_intValue;
+        public int IntValue
+        {
+            get { return m_intValue; }
+            set { m_intValue = value; }
+        }
+    }
+
     [System.Serializable]
     public class NodeEditorParameter : ScriptableObject
     {
@@ -20,8 +38,8 @@ namespace NodeEditorFramework
         [SerializeField] private ParameterType m_Type;
         public ParameterType Type => m_Type;
 
-        [SerializeField] private object m_Value;
-        public object Value => m_Value;
+        [SerializeField] private NodeEditorParameterValue m_Value;
+        public NodeEditorParameterValue Value => m_Value;
 
 
         //public T GetValue<T>()
@@ -38,7 +56,7 @@ namespace NodeEditorFramework
         public bool GetBool()
         {
             if (Type == ParameterType.Bool)
-                return (bool)Value;
+                return m_Value.BoolValue;
 
             throw new Exception("Wrong type");
             //return Value;
@@ -51,7 +69,7 @@ namespace NodeEditorFramework
         public void SetBool(bool newValue)
         {
             if (Type == ParameterType.Bool)
-                m_Value = newValue;
+                m_Value.BoolValue = newValue;
 
             throw new Exception("Wrong type");
         }
@@ -65,7 +83,7 @@ namespace NodeEditorFramework
         public int GetInt()
         {
             if (Type == ParameterType.Int)
-                return (int)Value;
+                return Value.IntValue;
 
             throw new Exception("Wrong type");
         }
@@ -78,7 +96,7 @@ namespace NodeEditorFramework
         public void SetInt(int newValue)
         {
             if (Type == ParameterType.Int)
-                m_Value = newValue;
+                m_Value.IntValue = newValue;
 
             throw new Exception("Wrong type");
         }
@@ -88,11 +106,15 @@ namespace NodeEditorFramework
         /// </summary>
         /// <param name="value">Parameter's value</param>
         /// <param name="name">Parameter's name</param>
-        public void SetNodeEditorParameter(ParameterType type, bool value, string name)
+        public void SetNodeEditorParameter(ParameterType type, object value, string name)
         {
             m_Type = type;
             m_ParamName = name;
-            m_Value = value;
+
+            if (type == ParameterType.Bool)
+                m_Value.BoolValue = (bool)value;
+            else
+                m_Value.IntValue = (int)value;
         }
 
 
@@ -126,7 +148,26 @@ namespace NodeEditorFramework
 
             GUILayout.FlexibleSpace();
 
-            m_Value = GUILayout.Toggle((bool)m_Value, new GUIContent());
+            string[] choices = Enum.GetNames(typeof(ParameterType));
+            int currentIndx = (int)Type;
+
+            int choseTypeInd = EditorGUILayout.Popup(currentIndx, choices);
+
+            m_Type = (ParameterType)choseTypeInd;
+
+            switch (Type)
+            {
+                case ParameterType.Bool:
+                    m_Value.BoolValue = GUILayout.Toggle(m_Value.BoolValue, new GUIContent());
+
+                    break;
+                case ParameterType.Int:
+                    m_Value.IntValue = EditorGUILayout.IntField(m_Value.IntValue);
+                    break;
+                default:
+                    break;
+            }
+
             GUILayout.EndHorizontal();
 
             //GUILayout.EndArea();
