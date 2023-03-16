@@ -37,6 +37,12 @@ namespace NodeEditorFramework
         private Vector2 m_offset;
         private Vector2 m_drag;
 
+        public Color m_trueColor = new Color(.52f, .7f, .17f, .2f);
+        public Color m_falseColor = new Color(.8F, .15F, .37F, .2f);
+
+        public Texture2D m_TrueTexture, m_FalseTexture;
+
+
         private float m_scale = 1;
 
         private bool m_isInitialised = false;
@@ -91,8 +97,10 @@ namespace NodeEditorFramework
 
             m_isInitialised = true;
 
-            
-            if(m_LoadedNodeCanvas.Entry == null)
+            m_TrueTexture = ColorToTex(m_trueColor);
+            m_FalseTexture = ColorToTex(m_falseColor);
+
+            if (m_LoadedNodeCanvas.Entry == null)
                 OnClickAddNode(new Vector2(Instance.position.width / 2, Instance.position.height / 2), "EntryNode");
         }
 
@@ -289,8 +297,8 @@ namespace NodeEditorFramework
             if (!m_LoadedNodeCanvas)
                 return;
 
-            Rect rect = new Rect(Vector2.up * 100, new Vector2(m_sideWindowWidth, 100));
-            m_LoadedNodeCanvas.DisplayParameters(rect);
+            //Rect rect = new Rect(Vector2.up * 100, new Vector2(m_sideWindowWidth, 100));
+            m_LoadedNodeCanvas.DisplayParameters();
         }
 
         /// <summary>

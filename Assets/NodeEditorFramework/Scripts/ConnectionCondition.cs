@@ -42,18 +42,32 @@ namespace NodeEditorFramework
                     currentIndx = i;
             }
 
+
+            bool verified = Evaluate();
+
+            Color oldBackgroundColor = GUI.backgroundColor;
+            GUI.backgroundColor = verified ? NodeEditor.Instance.m_trueColor : NodeEditor.Instance.m_falseColor;
+
+            GUILayout.BeginVertical(GUI.skin.box);
+            GUILayout.BeginHorizontal();
+
             int chosenParamNameIndx = EditorGUILayout.Popup(currentIndx, choices);
 
             m_Parameter = cnv.GetParameter(chosenParamNameIndx);
 
             m_Value = EditorGUILayout.Toggle((bool)m_Value);
 
-            GUILayout.Label(Evaluate().ToString());
+            //GUILayout.Label(Evaluate().ToString());
 
+            GUILayout.EndHorizontal();
             if (GUILayout.Button("Remove Condition"))
             {
                 NodeEditor.Instance.OnClickRemoveCondition(this);
             }
+
+            GUILayout.EndVertical();
+
+            GUI.backgroundColor = oldBackgroundColor;
         }
 #endif
 

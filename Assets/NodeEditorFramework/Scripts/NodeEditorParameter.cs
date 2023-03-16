@@ -115,17 +115,21 @@ namespace NodeEditorFramework
         /// Display parameter to Node editor window
         /// </summary>
         /// <param name="rect"></param>
-        public void Display(Rect rect)
+        public void Display()
         {
-            GUILayout.BeginArea(rect, NodeEditor.Instance.m_NodeBox);
+            //GUILayout.BeginArea(NodeEditor.Instance.m_NodeBox);
+
+            GUILayout.BeginHorizontal(GUI.skin.box);
             string newName = GUILayout.TextField(Name);
             if (CheckCanUseName(newName))
                 m_ParamName = newName;
 
+            GUILayout.FlexibleSpace();
 
-             m_Value = EditorGUILayout.Toggle((bool)m_Value);
+            m_Value = GUILayout.Toggle((bool)m_Value, new GUIContent());
+            GUILayout.EndHorizontal();
 
-            GUILayout.EndArea();
+            //GUILayout.EndArea();
         }
 #endif
     }

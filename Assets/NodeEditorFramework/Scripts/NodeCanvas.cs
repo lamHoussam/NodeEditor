@@ -184,7 +184,7 @@ namespace NodeEditorFramework
         /// Display to Node editor
         /// </summary>
         /// <param name="rect"></param>
-        public void DisplayParameters(Rect rect)
+        public void DisplayParameters()
         {
             GUILayout.Label(new GUIContent("Parameters"), NodeEditor.Instance.m_NodeLabelBold);
             if (m_Parameters == null)
@@ -193,8 +193,8 @@ namespace NodeEditorFramework
             for (int i = 0; i < m_Parameters.Count; i++)
             {
                 NodeEditorParameter param = (NodeEditorParameter)GetParameter(i);
-                param.Display(rect);
-                rect.position += Vector2.up * 100;
+                param.Display();
+                //rect.position += Vector2.up * 100;
             }
         }
 #endif
