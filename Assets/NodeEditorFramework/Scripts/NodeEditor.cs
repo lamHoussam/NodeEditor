@@ -1,5 +1,7 @@
 using System;
 using UnityEngine;
+using System.Linq;
+using System.Collections.Generic;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -297,7 +299,6 @@ namespace NodeEditorFramework
             if (!m_LoadedNodeCanvas)
                 return;
 
-            //Rect rect = new Rect(Vector2.up * 100, new Vector2(m_sideWindowWidth, 100));
             m_LoadedNodeCanvas.DisplayParameters();
         }
 
@@ -429,10 +430,16 @@ namespace NodeEditorFramework
         private void ProcessContextMenu(Vector2 mousePosition)
         {
             GenericMenu genericMenu = new GenericMenu();
-            genericMenu.AddItem(new GUIContent("Add Test node"), false, () => OnClickAddNode(mousePosition, "TestNode"));
-            genericMenu.AddItem(new GUIContent("Add State Node"), false, () => OnClickAddNode(mousePosition, "StateNode"));
+            Type[] assmblyTypes = typeof(Node).Assembly.GetTypes();
+
+            foreach (Type type in assmblyTypes)
+                if (type.IsSubclassOf(typeof(Node)) && type != typeof(EntryNode))
+                    genericMenu.AddItem(new GUIContent("Add " + type.Name), false, () => type.GetMethod("Create").Invoke(null, new object[] { new Rect(mousePosition, new Vector2(200, 50)) }));
+
+
             genericMenu.AddItem(new GUIContent("Add new Parameter"), false, () => OnClickAddParameter());
             genericMenu.AddItem(new GUIContent("Relocate"), false, () => Relocate());
+
             genericMenu.ShowAsContext();
         }
 
