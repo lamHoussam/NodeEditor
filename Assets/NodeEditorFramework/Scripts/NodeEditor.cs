@@ -433,9 +433,16 @@ namespace NodeEditorFramework
             Type[] assmblyTypes = typeof(Node).Assembly.GetTypes();
 
             foreach (Type type in assmblyTypes)
+            {
                 if (type.IsSubclassOf(typeof(Node)) && type != typeof(EntryNode))
-                    genericMenu.AddItem(new GUIContent("Add " + type.Name), false, () => type.GetMethod("Create").Invoke(null, new object[] { new Rect(mousePosition, new Vector2(200, 50)) }));
-
+                {
+                    genericMenu.AddItem(
+                        new GUIContent("Add " + type.Name), 
+                        false, 
+                        () => type.GetMethod("Create").Invoke(null, new object[] { new Rect(mousePosition, new Vector2(200, 50)) })
+                    );
+                }
+            }
 
             genericMenu.AddItem(new GUIContent("Add new Parameter"), false, () => OnClickAddParameter());
             genericMenu.AddItem(new GUIContent("Relocate"), false, () => Relocate());

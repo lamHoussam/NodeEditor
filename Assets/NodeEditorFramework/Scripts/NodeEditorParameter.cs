@@ -69,7 +69,10 @@ namespace NodeEditorFramework
         public void SetBool(bool newValue)
         {
             if (Type == ParameterType.Bool)
+            {
                 m_Value.BoolValue = newValue;
+                return;
+            }
 
             throw new Exception("Wrong type");
         }
@@ -96,7 +99,10 @@ namespace NodeEditorFramework
         public void SetInt(int newValue)
         {
             if (Type == ParameterType.Int)
+            {
                 m_Value.IntValue = newValue;
+                return;
+            }
 
             throw new Exception("Wrong type");
         }
