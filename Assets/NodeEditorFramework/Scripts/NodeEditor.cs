@@ -307,7 +307,10 @@ namespace NodeEditorFramework
         /// <param name="connection">Connection to select</param>
         public void OnClickNodeConnection(NodeConnection connection)
         {
+            ClearConnectionSelection();
+
             m_SelectedNodeConnection = connection;
+            m_SelectedNodeConnection.Select();
         }
 
         /// <summary>
@@ -384,15 +387,14 @@ namespace NodeEditorFramework
             m_drag = Vector2.zero;
             switch (e.type)
             {
-                case EventType.MouseDown:
-                    if (e.button == 1)
-                        ProcessContextMenu(e.mousePosition);
-
-                    break;
-
                 case EventType.MouseDrag:
                     if (e.button == 0)
                         OnDrag(e.delta);
+                    break;
+
+                case EventType.MouseDown:
+                    if (e.button == 1)
+                        ProcessContextMenu(e.mousePosition);
                     break;
 
                 case EventType.ScrollWheel:
@@ -535,7 +537,12 @@ namespace NodeEditorFramework
         /// </summary>
         public void ClearConnectionSelection()
         {
+            if (m_SelectedNodeForConnection)
+                m_SelectedNodeForConnection.Deselect();
             m_SelectedNodeForConnection = null;
+
+            if (m_SelectedNodeConnection)
+                m_SelectedNodeConnection.Deselect();
 
             m_SelectedNodeConnection = null;
         }

@@ -15,6 +15,7 @@ namespace NodeEditorFramework
         public int ConditionsCount => m_Conditions == null ? 0 : m_Conditions.Count;
         public ConnectionCondition GetCondition(int i) => m_Conditions[i];
 
+        private bool m_isSelected;
 
         /// <summary>
         /// Evaluate all conditions in condition's list
@@ -59,6 +60,16 @@ namespace NodeEditorFramework
 
         }
 
+        public void Select()
+        {
+            m_isSelected = true;
+        }
+
+        public void Deselect()
+        {
+            m_isSelected = false;
+        }
+
         /// <summary>
         /// Draw node connection to Node editor
         /// </summary>
@@ -67,17 +78,26 @@ namespace NodeEditorFramework
             if (m_From == null || m_To == null)
                 return;
 
-            Color col = NodeEditor.Instance.m_trueColor;
-            Color trueCol = new Color(col.r, col.g, col.b);
-            col = NodeEditor.Instance.m_falseColor;
-            Color falseCol = new Color(col.r, col.g, col.b);
+            Color cnxColor;
+
+            if (m_isSelected)
+                cnxColor = new Color(.1f, .5f, .8f);
+            else
+            {
+                Color col = NodeEditor.Instance.m_trueColor;
+                Color trueCol = new Color(col.r, col.g, col.b);
+                col = NodeEditor.Instance.m_falseColor;
+                Color falseCol = new Color(col.r, col.g, col.b);
+
+                cnxColor = EvaluateConditions() ? trueCol : falseCol;
+            }
 
             Handles.DrawBezier(
                 m_From.Center,
                 m_To.Center,
                 m_From.Center - Vector2.left * 50f,
                 m_To.Center + Vector2.left * 50f,
-                EvaluateConditions() ? trueCol : falseCol,
+                cnxColor,
                 null,
                 2f
             );
