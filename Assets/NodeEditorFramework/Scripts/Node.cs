@@ -23,6 +23,8 @@ namespace NodeEditorFramework
         protected bool m_isDragged;
         protected bool m_isEvaluationResult;
 
+        public virtual bool Removable => true;
+
         /// <summary>
         /// Get Next node with true connection conditions
         /// </summary>
@@ -125,7 +127,10 @@ namespace NodeEditorFramework
         {
             GenericMenu genericMenu = new GenericMenu();
             genericMenu.AddItem(new GUIContent("Make Connection"), false, () => OnClickMakeConnection());
-            genericMenu.AddItem(new GUIContent("Remove Node"), false, () => NodeEditor.Instance.OnClickRemoveNode(this));
+
+            if (Removable)
+                genericMenu.AddItem(new GUIContent("Remove Node"), false, () => NodeEditor.Instance.OnClickRemoveNode(this));
+
             genericMenu.ShowAsContext();
 
         }
