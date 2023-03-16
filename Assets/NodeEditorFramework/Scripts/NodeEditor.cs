@@ -391,11 +391,13 @@ namespace NodeEditorFramework
             switch (e.type)
             {
                 case EventType.MouseDrag:
-                    if (e.button == 0)
+                    if (e.button == 2)
                         OnDrag(e.delta);
                     break;
 
                 case EventType.MouseDown:
+                    if (e.button == 0)
+                        ClearConnectionSelection();
                     if (e.button == 1)
                         ProcessContextMenu(e.mousePosition);
                     break;
