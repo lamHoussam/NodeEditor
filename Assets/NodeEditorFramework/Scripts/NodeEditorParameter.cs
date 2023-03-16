@@ -1,27 +1,26 @@
-using System;
-using System.Data.Common;
 using UnityEditor;
 using UnityEngine;
 
 namespace NodeEditorFramework
 {
-    [Serializable]
+    [System.Serializable]
     public enum ParameterType
     {
         Bool = 0,
         Int = 1,
     }
 
+    [System.Serializable]
     public struct NodeEditorParameterValue
     {
-        private bool m_boolValue;
+        [SerializeField] private bool m_boolValue;
         public bool BoolValue
         {
             get { return m_boolValue; }
             set { m_boolValue = value; }
         }
 
-        private int m_intValue;
+        [SerializeField] private int m_intValue;
         public int IntValue
         {
             get { return m_intValue; }
@@ -58,7 +57,7 @@ namespace NodeEditorFramework
             if (Type == ParameterType.Bool)
                 return m_Value.BoolValue;
 
-            throw new Exception("Wrong type");
+            throw new System.Exception("Wrong type");
             //return Value;
         }
 
@@ -74,7 +73,7 @@ namespace NodeEditorFramework
                 return;
             }
 
-            throw new Exception("Wrong type");
+            throw new System.Exception("Wrong type");
         }
 
 
@@ -88,7 +87,7 @@ namespace NodeEditorFramework
             if (Type == ParameterType.Int)
                 return Value.IntValue;
 
-            throw new Exception("Wrong type");
+            throw new System.Exception("Wrong type");
         }
 
         /// <summary>
@@ -104,7 +103,7 @@ namespace NodeEditorFramework
                 return;
             }
 
-            throw new Exception("Wrong type");
+            throw new System.Exception("Wrong type");
         }
 
         /// <summary>
@@ -154,7 +153,7 @@ namespace NodeEditorFramework
 
             GUILayout.FlexibleSpace();
 
-            string[] choices = Enum.GetNames(typeof(ParameterType));
+            string[] choices = System.Enum.GetNames(typeof(ParameterType));
             int currentIndx = (int)Type;
 
             int choseTypeInd = EditorGUILayout.Popup(currentIndx, choices);
