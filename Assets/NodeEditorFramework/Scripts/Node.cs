@@ -24,6 +24,23 @@ namespace NodeEditorFramework
         protected bool m_isEvaluationResult;
 
         /// <summary>
+        /// Get Next node with true connection conditions
+        /// </summary>
+        /// <returns></returns>
+        public Node GetNextNode()
+        {
+
+            if (m_Connections == null)
+                return null;
+
+            for(int i = 0; i < m_Connections.Count; i++)
+                if (m_Connections[i].EvaluateConditions())
+                    return m_Connections[i].To;
+
+            return null;
+        }
+#if UNITY_EDITOR
+        /// <summary>
         /// Draw Node to editor window
         /// </summary>
         /// <param name="scale"></param>
@@ -156,26 +173,10 @@ namespace NodeEditorFramework
             }
         }
 
-        /// <summary>
-        /// Get Next node with true connection conditions
-        /// </summary>
-        /// <returns></returns>
-        public Node GetNextNode()
-        {
-
-            if (m_Connections == null)
-                return null;
-
-            for(int i = 0; i < m_Connections.Count; i++)
-                if (m_Connections[i].EvaluateConditions())
-                    return m_Connections[i].To;
-
-            return null;
-        }
-
         public void SetEvaluationResult(bool evaluationResult = true)
         {
             m_isEvaluationResult = evaluationResult;
         }
+#endif
     }
 }

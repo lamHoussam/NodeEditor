@@ -39,7 +39,7 @@ namespace NodeEditorFramework
         /// </summary>
         /// <param name="param">Variable's name</param>
         /// <returns></returns>
-        public bool GetBool(string param) => GetParameter(param).Value;
+        public bool GetBool(string param) => (bool)GetParameter(param).Value;
 
         /// <summary>
         /// Set boolean value of parameter with name param
@@ -53,7 +53,42 @@ namespace NodeEditorFramework
         /// </summary>
         /// <returns>First parameter null if no parameters</returns>
         public NodeEditorParameter GetFirst() => ParametersCount == 0 ? null : m_Parameters[0];
+
+        /// <summary>
+        /// Checks if parameter with name exists already
+        /// </summary>
+        /// <param name="name">name to check</param>
+        /// <returns>if exists</returns>
+        public bool ContainsParameter(string name)
+        {
+            for(int i = 0; i < m_Parameters.Count; i++)
+                if (m_Parameters[i].Name.Equals(name))
+                    return true;
+
+            return false;
+        }
         
+
+        /// <summary>
+        /// Evaluate conditions starting from Entry
+        /// </summary>
+        /// <returns>Last node such that path from Entry to node evaluates to true</returns>
+        public Node Evaluate()
+        {
+
+            Node node = Entry;
+            Node next = node.GetNextNode();
+            while (next != null)
+            {
+                node = next;
+                next = next.GetNextNode();
+            }
+
+            return node;
+        }
+
+
+#if UNITY_EDITOR
         /// <summary>
         /// Add new Node
         /// </summary>
@@ -122,25 +157,6 @@ namespace NodeEditorFramework
         /// </summary>
         /// <param name="nodeConnection">Node connection to remove</param>
         public void RemoveNodeConnection(NodeConnection nodeConnection) => m_NodesConnections?.Remove(nodeConnection);
-
-        /// <summary>
-        /// Evaluate conditions starting from Entry
-        /// </summary>
-        /// <returns>Last node such that path from Entry to node evaluates to true</returns>
-        public Node Evaluate()
-        {
-
-            Node node = Entry;
-            Node next = node.GetNextNode();
-            while (next != null)
-            {
-                node = next;
-                next = next.GetNextNode();
-            }
-
-            return node;
-        }
-
         /// <summary>
         /// Add new parameter
         /// </summary>
@@ -165,20 +181,6 @@ namespace NodeEditorFramework
         }
 
         /// <summary>
-        /// Checks if parameter with name exists already
-        /// </summary>
-        /// <param name="name">name to check</param>
-        /// <returns>if exists</returns>
-        public bool ContainsParameter(string name)
-        {
-            for(int i = 0; i < m_Parameters.Count; i++)
-                if (m_Parameters[i].Name.Equals(name))
-                    return true;
-
-            return false;
-        }
-        
-        /// <summary>
         /// Display to Node editor
         /// </summary>
         /// <param name="rect"></param>
@@ -195,5 +197,6 @@ namespace NodeEditorFramework
                 rect.position += Vector2.up * 100;
             }
         }
+#endif
     }
 }

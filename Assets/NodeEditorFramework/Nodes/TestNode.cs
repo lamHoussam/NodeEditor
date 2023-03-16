@@ -6,6 +6,8 @@ namespace NodeEditorFramework
     {
 
         private int m_value;
+
+#if UNITY_EDITOR
         public static TestNode Create(Rect rect)
         {
             TestNode node = CreateInstance<TestNode>();
@@ -26,5 +28,6 @@ namespace NodeEditorFramework
             GUI.Box(boxRect, name, m_isSelected ? NodeEditor.Instance.m_SelectedNodeBase : NodeEditor.Instance.m_NodeBase);
 
         }
+#endif
     }
 }

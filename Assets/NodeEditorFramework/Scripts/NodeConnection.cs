@@ -17,6 +17,24 @@ namespace NodeEditorFramework
 
 
         /// <summary>
+        /// Evaluate all conditions in condition's list
+        /// </summary>
+        /// <returns>True if all conditions evaluate to true False else</returns>
+        public bool EvaluateConditions()
+        {
+            if (m_Conditions == null)
+                return true;
+
+            for(int i = 0; i < m_Conditions.Count; i++)
+                if (!m_Conditions[i].Evaluate()) 
+                    return false;
+
+            return true;
+        }
+
+#if UNITY_EDITOR
+
+        /// <summary>
         /// Set nodes connected to this
         /// </summary>
         /// <param name="from">Starting node</param>
@@ -108,29 +126,14 @@ namespace NodeEditorFramework
         }
 
         /// <summary>
-        /// Evaluate all conditions in condition's list
-        /// </summary>
-        /// <returns>True if all conditions evaluate to true False else</returns>
-        public bool EvaluateConditions()
-        {
-            if (m_Conditions == null)
-                return true;
-
-            for(int i = 0; i < m_Conditions.Count; i++)
-                if (!m_Conditions[i].Evaluate()) 
-                    return false;
-
-            return true;
-        }
-
-        /// <summary>
         /// Called on remove node connection
         /// </summary>
         public void OnRemove()
         {
             m_Conditions?.Clear();
             m_From.RemoveConnection(this);
-        }       
+        }
+#endif
 
     }
 }

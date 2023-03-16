@@ -20,6 +20,7 @@ namespace NodeEditorFramework
             m_Value = value;
         }
 
+#if UNITY_EDITOR
         /// <summary>
         /// Display condition to node editor
         /// </summary>
@@ -54,6 +55,7 @@ namespace NodeEditorFramework
                 NodeEditor.Instance.OnClickRemoveCondition(this);
             }
         }
+#endif
 
         /// <summary>
         /// Evaluate condition

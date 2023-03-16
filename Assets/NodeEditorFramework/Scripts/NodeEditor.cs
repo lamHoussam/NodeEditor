@@ -1,7 +1,8 @@
 using System;
-using UnityEditor;
 using UnityEngine;
 
+#if UNITY_EDITOR
+using UnityEditor;
 namespace NodeEditorFramework
 {
     public class NodeEditor : EditorWindow
@@ -432,7 +433,7 @@ namespace NodeEditorFramework
                 return;
 
             NodeEditorParameter param = CreateInstance<NodeEditorParameter>();
-            param.SetNodeEditorParameter(false, "Parameter");
+            param.SetNodeEditorParameter(ParameterType.Bool, false, "Parameter");
             m_LoadedNodeCanvas.AddParameter(param);
         }
 
@@ -556,3 +557,4 @@ namespace NodeEditorFramework
         }
     }
 }
+#endif

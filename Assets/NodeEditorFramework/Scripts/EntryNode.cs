@@ -7,6 +7,8 @@ namespace NodeEditorFramework
 {
     public class EntryNode : Node
     {
+
+#if UNITY_EDITOR
         public static EntryNode Create(Rect rect)
         {
             EntryNode node = CreateInstance<EntryNode>();
@@ -29,5 +31,6 @@ namespace NodeEditorFramework
             GUILayout.EndArea();
 
         }
+#endif
     }
 }

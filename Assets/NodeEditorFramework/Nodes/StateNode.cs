@@ -7,6 +7,7 @@ public class StateNode : Node
     [SerializeField] private TestSettings m_Settings;
     public TestSettings Settings => m_Settings;
 
+#if UNITY_EDITOR
     public static StateNode Create(Rect rect)
     {
         StateNode node = CreateInstance<StateNode>();
@@ -28,5 +29,5 @@ public class StateNode : Node
         m_Settings = (TestSettings)EditorGUILayout.ObjectField(m_Settings, typeof(TestSettings), false);
         GUILayout.EndArea();
     }
-
+#endif
 }

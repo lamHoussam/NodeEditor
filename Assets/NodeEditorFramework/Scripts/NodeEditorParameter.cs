@@ -17,17 +17,31 @@ namespace NodeEditorFramework
         [SerializeField] private string m_ParamName;
         public string Name => m_ParamName;
 
-        [SerializeField] private bool m_Value;
-        public bool Value => m_Value;
+        [SerializeField] private ParameterType m_Type;
+        public ParameterType Type => m_Type;
+
+        [SerializeField] private object m_Value;
+        public object Value => m_Value;
+
+
+        //public T GetValue<T>()
+        //{
+        //    if(typeof)
+        //}
 
 
         /// <summary>
         /// Get boolean value
         /// </summary>
         /// <returns></returns>
+        /// /// <exception cref="Exception">If parameter is not boolean</exception>
         public bool GetBool()
         {
-            return Value;
+            if (Type == ParameterType.Bool)
+                return (bool)Value;
+
+            throw new Exception("Wrong type");
+            //return Value;
         }
 
         /// <summary>
@@ -36,22 +50,53 @@ namespace NodeEditorFramework
         /// <param name="newValue"></param>
         public void SetBool(bool newValue)
         {
-            m_Value = newValue;
+            if (Type == ParameterType.Bool)
+                m_Value = newValue;
+
+            throw new Exception("Wrong type");
         }
 
+
+        /// <summary>
+        /// Get integer value
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public int GetInt()
+        {
+            if (Type == ParameterType.Int)
+                return (int)Value;
+
+            throw new Exception("Wrong type");
+        }
+
+        /// <summary>
+        /// Set integer value
+        /// </summary>
+        /// <param name="newValue"></param>
+        /// <exception cref="Exception"></exception>
+        public void SetInt(int newValue)
+        {
+            if (Type == ParameterType.Int)
+                m_Value = newValue;
+
+            throw new Exception("Wrong type");
+        }
 
         /// <summary>
         /// Initialises parameter values 
         /// </summary>
         /// <param name="value">Parameter's value</param>
         /// <param name="name">Parameter's name</param>
-        public void SetNodeEditorParameter(bool value, string name)
+        public void SetNodeEditorParameter(ParameterType type, bool value, string name)
         {
+            m_Type = type;
             m_ParamName = name;
             m_Value = value;
         }
 
 
+#if UNITY_EDITOR
         // TODO: Add Regex
 
         /// <summary>
@@ -82,5 +127,6 @@ namespace NodeEditorFramework
 
             GUILayout.EndArea();
         }
+#endif
     }
 }
