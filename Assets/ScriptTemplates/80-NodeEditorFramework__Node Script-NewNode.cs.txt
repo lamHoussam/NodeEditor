@@ -10,6 +10,7 @@ public class #SCRIPTNAME# : Node
 	
 
 #if UNITY_EDITOR
+    public override bool Removable => base.Removable;
     public static #SCRIPTNAME# Create(Rect rect)
     {
         #SCRIPTNAME# node = CreateInstance<#SCRIPTNAME#>();

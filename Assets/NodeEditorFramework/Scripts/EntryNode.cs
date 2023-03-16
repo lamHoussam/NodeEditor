@@ -20,8 +20,6 @@ namespace NodeEditorFramework
             return node;
         }
 
-
-
         public override void Draw(float scale = 1)
         {
             base.Draw(scale);
