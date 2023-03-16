@@ -396,8 +396,6 @@ namespace NodeEditorFramework
                     break;
 
                 case EventType.MouseDown:
-                    if (e.button == 0)
-                        ClearConnectionSelection();
                     if (e.button == 1)
                         ProcessContextMenu(e.mousePosition);
                     break;
