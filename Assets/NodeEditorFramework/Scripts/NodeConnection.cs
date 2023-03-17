@@ -17,6 +17,8 @@ namespace NodeEditorFramework
 
         private bool m_isSelected;
 
+        private Vector2 m_scrollPosition;
+
         /// <summary>
         /// Evaluate all conditions in condition's list
         /// </summary>
@@ -119,6 +121,9 @@ namespace NodeEditorFramework
                 NodeEditor.Instance.OnClickRemoveNodeConnection(this);
 
             GUILayout.Label(new GUIContent("Conditions"), NodeEditor.Instance.m_NodeLabelBold);
+
+            GUILayout.BeginVertical();
+            m_scrollPosition = GUILayout.BeginScrollView(m_scrollPosition, false, true);
             if (GUILayout.Button("New Condition"))
                 NodeEditor.Instance.OnClickAddCondition(this);
 
@@ -126,6 +131,9 @@ namespace NodeEditorFramework
             if (m_Conditions != null)
                 for (int i = 0; i < m_Conditions.Count; i++)
                     m_Conditions[i].Display();
+
+            GUILayout.EndScrollView();
+            GUILayout.EndVertical();
         }
 
         /// <summary>

@@ -19,6 +19,9 @@ namespace NodeEditorFramework
         // TODO: Optimise to use only Hashtable
         [SerializeField] private List<NodeEditorParameter> m_Parameters;
         public int ParametersCount => m_Parameters == null ? 0 : m_Parameters.Count;
+
+        private Vector2 m_scrollPosition;
+
         public NodeEditorParameter GetParameter(string name)
         {
             for(int i = 0; i < m_Parameters.Count; i++)
@@ -195,16 +198,23 @@ namespace NodeEditorFramework
         /// <param name="rect"></param>
         public void DisplayParameters()
         {
+
             GUILayout.Label(new GUIContent("Parameters"), NodeEditor.Instance.m_NodeLabelBold);
             if (m_Parameters == null)
                 return;
 
+            GUILayout.BeginVertical(GUI.skin.box);
+            m_scrollPosition = GUILayout.BeginScrollView(m_scrollPosition, false, true);
+
             for (int i = 0; i < m_Parameters.Count; i++)
             {
-                NodeEditorParameter param = (NodeEditorParameter)GetParameter(i);
+                NodeEditorParameter param = GetParameter(i);
                 param.Display();
                 //rect.position += Vector2.up * 100;
             }
+
+            GUILayout.EndScrollView();
+            GUILayout.EndVertical();
         }
 #endif
     }
