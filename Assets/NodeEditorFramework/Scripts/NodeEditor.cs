@@ -463,6 +463,16 @@ namespace NodeEditorFramework
             m_LoadedNodeCanvas.AddParameter(param);
         }
 
+        public void OnClickRemoveParameter(NodeEditorParameter param)
+        {
+            if (m_LoadedNodeCanvas)
+            {
+                param.OnRemove();
+                m_LoadedNodeCanvas.RemoveParameter(param);
+            }
+
+        }
+
         /// <summary>
         /// Called on click remove node
         /// </summary>

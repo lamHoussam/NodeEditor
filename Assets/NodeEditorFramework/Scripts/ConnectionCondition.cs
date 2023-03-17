@@ -36,13 +36,21 @@ namespace NodeEditorFramework
             int paramCount = cnv.ParametersCount;
 
             string[] choices = new string[paramCount];
-            int currentIndx = 0;
+            int currentIndx = -1;
 
             for (int i = 0; i < paramCount; i++)
             {
                 choices[i] = cnv.GetParameter(i).Name;
                 if (choices[i] == m_Parameter.Name)
                     currentIndx = i;
+            }
+
+            if(currentIndx == -1)
+            {
+                NodeEditor.Instance.OnClickRemoveCondition(this);
+                GUI.changed = true;
+
+                return;
             }
 
 
@@ -57,6 +65,15 @@ namespace NodeEditorFramework
             int chosenParamNameIndx = EditorGUILayout.Popup(currentIndx, choices);
 
             m_Parameter = cnv.GetParameter(chosenParamNameIndx);
+            if (m_Parameter == null)
+            {
+                NodeEditor.Instance.OnClickRemoveCondition(this);
+
+                GUILayout.EndHorizontal();
+                GUILayout.EndVertical();
+                GUI.changed = true;
+                return;
+            }
 
             switch (m_Parameter.Type)
             {

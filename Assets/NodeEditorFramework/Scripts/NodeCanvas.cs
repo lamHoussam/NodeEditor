@@ -29,7 +29,7 @@ namespace NodeEditorFramework
         }
         public NodeEditorParameter GetParameter(int ind)
         {
-            return m_Parameters[ind];
+            return ind >= ParametersCount ? null : m_Parameters[ind];
             //object obj = m_Parameters[ind];
             //return (NodeEditorParameter)obj;
         }
@@ -179,6 +179,15 @@ namespace NodeEditorFramework
                 AssetDatabase.Refresh();
             }
         }
+
+        public void RemoveParameter(NodeEditorParameter param)
+        {
+            if (m_Parameters != null)
+                m_Parameters.Remove(param);
+        }
+
+        public void RemoveParameter(string name) => RemoveParameter(GetParameter(name));
+        public void RemoveParameter(int ind) => RemoveParameter(GetParameter(ind));
 
         /// <summary>
         /// Display to Node editor
