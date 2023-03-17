@@ -1,3 +1,5 @@
+using System.Text.RegularExpressions;
+using System;
 using UnityEditor;
 using UnityEngine;
 
@@ -133,7 +135,11 @@ namespace NodeEditorFramework
         /// <returns></returns>
         public bool CheckCanUseName(string newName)
         {
-            return !NodeEditor.Instance.LoadedNodeCanvas.ContainsParameter(newName);
+            if (NodeEditor.Instance.LoadedNodeCanvas.ContainsParameter(newName))
+                return false;
+
+            Regex regex = new Regex(@"^[a-zA-Z_]\w*$"); // regex pattern for valid parameter name
+            return regex.IsMatch(newName);
         }
 
 
