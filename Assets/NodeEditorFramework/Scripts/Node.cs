@@ -25,6 +25,8 @@ namespace NodeEditorFramework
 
         public virtual bool Removable => true;
 
+        [SerializeField] protected Color m_nodeColor = Color.gray;
+
         /// <summary>
         /// Get Next node with true connection conditions
         /// </summary>
@@ -41,6 +43,22 @@ namespace NodeEditorFramework
 
             return null;
         }
+
+
+        // TODO: Implement DFS to find next node of type T
+        /// <summary>
+        /// Get next node with true conditions from this (DFS)
+        /// </summary>
+        /// <typeparam name="T">node's type</typeparam>
+        /// <returns>Next node of type T with true conditions from this</returns>
+        public T GetNextNode<T>() where T : Node
+        {
+            T res = default;
+
+
+            return res;
+        }
+
 #if UNITY_EDITOR
         /// <summary>
         /// Draw Node to editor window

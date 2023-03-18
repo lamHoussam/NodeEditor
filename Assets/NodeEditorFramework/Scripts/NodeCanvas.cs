@@ -90,6 +90,25 @@ namespace NodeEditorFramework
             return node;
         }
 
+        /// <summary>
+        /// Evaluate conditions starting from Entry to first node of type T
+        /// </summary>
+        /// <typeparam name="T">node's type</typeparam>
+        /// <returns>Last node such that path from Entry to node evaluates to true and node is of type T</returns>
+        public T Evaluate<T>() where T : Node
+        {
+            Node node = Entry;
+            T next = node.GetNextNode<T>();
+
+            while (next != null)
+            {
+                node = next;
+                next = next.GetNextNode<T>();
+            }
+
+            return node == Entry ? default : (T)node;
+        }
+
 
 #if UNITY_EDITOR
         /// <summary>

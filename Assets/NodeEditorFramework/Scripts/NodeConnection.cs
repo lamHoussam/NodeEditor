@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Data.Common;
 using UnityEditor;
 using UnityEngine;
 
@@ -46,19 +47,6 @@ namespace NodeEditorFramework
         {
             m_From = from;
             m_To = to;
-
-            if (!System.String.IsNullOrEmpty(AssetDatabase.GetAssetPath(NodeEditor.Instance.LoadedNodeCanvas)))
-            {
-                AssetDatabase.AddObjectToAsset(this, NodeEditor.Instance.LoadedNodeCanvas);
-
-                if (m_Conditions != null)
-                {
-                    for (int i = 0; i < m_Conditions.Count; i++)
-                        AssetDatabase.AddObjectToAsset(m_Conditions[i], this);
-                }
-
-                AssetDatabase.Refresh();
-            }
 
         }
 
@@ -144,6 +132,14 @@ namespace NodeEditorFramework
         {
             m_Conditions ??= new List<ConnectionCondition>();
             m_Conditions.Add(cndition);
+
+
+            if (!System.String.IsNullOrEmpty(AssetDatabase.GetAssetPath(this)))
+            {
+                AssetDatabase.AddObjectToAsset(cndition, this);
+                AssetDatabase.Refresh();
+            }
+
         }
 
         /// <summary>
