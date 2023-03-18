@@ -104,6 +104,9 @@ namespace NodeEditorFramework
 
             if (m_LoadedNodeCanvas.Entry == null)
                 OnClickAddNode(new Vector2(Instance.position.width / 2, Instance.position.height / 2), "EntryNode");
+
+            for (int i = 0; i < m_LoadedNodeCanvas.NodeConnectionsCount; i++)
+                m_LoadedNodeCanvas.GetNodeConnection(i).Deselect();
         }
 
 
@@ -604,6 +607,11 @@ namespace NodeEditorFramework
 
             Handles.color = Color.white;
             Handles.EndGUI();
+        }
+
+        public void OnDisable()
+        {
+            ClearConnectionSelection();
         }
     }
 }
