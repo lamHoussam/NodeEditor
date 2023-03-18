@@ -28,6 +28,7 @@ namespace NodeEditorFramework
                 if (m_Parameters[i].Name.Equals(name))
                     return m_Parameters[i];
 
+            Debug.LogError("No parameter with name : " + name + " was found");
             return null;
         }
         public NodeEditorParameter GetParameter(int ind)
@@ -42,14 +43,14 @@ namespace NodeEditorFramework
         /// </summary>
         /// <param name="param">Variable's name</param>
         /// <returns></returns>
-        public bool GetBool(string param) => (bool)GetParameter(param).Value.BoolValue;
+        public bool GetBool(string param) => (bool)GetParameter(param)?.Value.BoolValue;
 
         /// <summary>
         /// Set boolean value of parameter with name param
         /// </summary>
         /// <param name="param">Parameter to change</param>
         /// <param name="value">New Value</param>
-        public void SetBool(string param, bool value) => GetParameter(param).SetBool(value);
+        public void SetBool(string param, bool value) => GetParameter(param)?.SetBool(value);
 
         /// <summary>
         /// 
