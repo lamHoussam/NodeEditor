@@ -9,6 +9,8 @@ namespace NodeEditorFramework
         [SerializeField] private NodeEditorParameter m_Parameter;
         [SerializeField] private NodeEditorParameterValue m_Value;
 
+
+        #region API
         /// <summary>
         /// Set condition's parameter and value to check with
         /// </summary>
@@ -115,5 +117,7 @@ namespace NodeEditorFramework
             else
                 return m_Value.IntValue == m_Parameter.Value.IntValue;
         }
+
+        #endregion
     }
 }

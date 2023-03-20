@@ -11,21 +11,26 @@ namespace NodeEditorFramework
         [SerializeField] protected Rect m_InitialRect;
         //public Rect InitialRect => m_InitialRect;
 
-        public Vector2 Position => m_Rect.position;
-        public Vector2 Size => m_Rect.size;
-        public float Width => m_Rect.width;
-        public float Height => m_Rect.height;
-        public Vector2 Center => m_Rect.center;
+
 
         [SerializeField] private List<NodeConnection> m_Connections;
 
         protected bool m_isSelected;
         protected bool m_isDragged;
         protected bool m_isEvaluationResult;
-
-        public virtual bool Removable => true;
-
         [SerializeField] protected Color m_nodeColor = Color.gray;
+
+        #region Properties API
+        public Vector2 Position => m_Rect.position;
+        public Vector2 Size => m_Rect.size;
+        public float Width => m_Rect.width;
+        public float Height => m_Rect.height;
+        public Vector2 Center => m_Rect.center;
+        public virtual bool Removable => true;
+        #endregion
+
+
+        #region API
 
         /// <summary>
         /// Get Next node with true connection conditions
@@ -59,7 +64,11 @@ namespace NodeEditorFramework
             return res;
         }
 
+        #endregion
+
 #if UNITY_EDITOR
+
+        #region EditorAPI
         /// <summary>
         /// Draw Node to editor window
         /// </summary>
@@ -178,6 +187,11 @@ namespace NodeEditorFramework
         {
             m_Connections?.Remove(connection);
         }
+        public void SetEvaluationResult(bool evaluationResult = true)
+        {
+            m_isEvaluationResult = evaluationResult;
+        }
+        #endregion
 
         protected void Init()
         {
@@ -196,10 +210,6 @@ namespace NodeEditorFramework
             }
         }
 
-        public void SetEvaluationResult(bool evaluationResult = true)
-        {
-            m_isEvaluationResult = evaluationResult;
-        }
 #endif
     }
 }

@@ -34,14 +34,15 @@ namespace NodeEditorFramework
     public class NodeEditorParameter : ScriptableObject
     {
         [SerializeField] private string m_ParamName;
-        public string Name => m_ParamName;
-
         [SerializeField] private ParameterType m_Type;
-        public ParameterType Type => m_Type;
-
         [SerializeField] private NodeEditorParameterValue m_Value;
-        public NodeEditorParameterValue Value => m_Value;
 
+
+        #region Properties API
+        public string Name => m_ParamName;
+        public ParameterType Type => m_Type;
+        public NodeEditorParameterValue Value => m_Value;
+        #endregion
 
         //public T GetValue<T>()
         //{
@@ -49,6 +50,7 @@ namespace NodeEditorFramework
         //}
 
 
+        #region API
         /// <summary>
         /// Get boolean value
         /// </summary>
@@ -124,10 +126,11 @@ namespace NodeEditorFramework
                 m_Value.IntValue = (int)value;
         }
 
+        #endregion
 
 #if UNITY_EDITOR
-        // TODO: Add Regex
 
+        #region Editor API
         /// <summary>
         /// Check if newName can be used for parameter
         /// </summary>
@@ -195,6 +198,8 @@ namespace NodeEditorFramework
         {
 
         }
+
+        #endregion
 #endif
     }
 }

@@ -7,20 +7,23 @@ namespace NodeEditorFramework
     public class NodeCanvas : ScriptableObject
     {
         [SerializeField] private List<Node> m_Nodes;
-        public EntryNode Entry => NodeCount == 0 ? null : (EntryNode)m_Nodes[0];
-        public int NodeCount => m_Nodes == null ? 0 : m_Nodes.Count;
-        public Node GetNode(int ind) => m_Nodes[ind];
 
         [SerializeField] private List<NodeConnection> m_NodesConnections;
-        public int NodeConnectionsCount => m_NodesConnections == null ? 0 : m_NodesConnections.Count;
-        public NodeConnection GetNodeConnection(int ind) => m_NodesConnections[ind];
-
+        private Vector2 m_scrollPosition;
 
         // TODO: Optimise to use only Hashtable
         [SerializeField] private List<NodeEditorParameter> m_Parameters;
-        public int ParametersCount => m_Parameters == null ? 0 : m_Parameters.Count;
 
-        private Vector2 m_scrollPosition;
+        #region Properties API
+        public EntryNode Entry => NodeCount == 0 ? null : (EntryNode)m_Nodes[0];
+        public int NodeCount => m_Nodes == null ? 0 : m_Nodes.Count;
+        public int NodeConnectionsCount => m_NodesConnections == null ? 0 : m_NodesConnections.Count;
+        public int ParametersCount => m_Parameters == null ? 0 : m_Parameters.Count;
+        #endregion
+
+        #region API
+        public Node GetNode(int ind) => m_Nodes[ind];
+        public NodeConnection GetNodeConnection(int ind) => m_NodesConnections[ind];
 
         public NodeEditorParameter GetParameter(string name)
         {
@@ -109,9 +112,10 @@ namespace NodeEditorFramework
 
             return node == Entry ? default : (T)node;
         }
-
+        #endregion
 
 #if UNITY_EDITOR
+        #region Editor API
         /// <summary>
         /// Add new Node
         /// </summary>
@@ -205,8 +209,7 @@ namespace NodeEditorFramework
 
         public void RemoveParameter(NodeEditorParameter param)
         {
-            if (m_Parameters != null)
-                m_Parameters.Remove(param);
+            m_Parameters?.Remove(param);
         }
 
         public void RemoveParameter(string name) => RemoveParameter(GetParameter(name));
@@ -236,6 +239,8 @@ namespace NodeEditorFramework
             GUILayout.EndScrollView();
             GUILayout.EndVertical();
         }
+
+        #endregion
 #endif
     }
 }
