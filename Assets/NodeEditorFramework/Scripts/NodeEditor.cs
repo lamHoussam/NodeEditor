@@ -356,25 +356,35 @@ namespace NodeEditorFramework
                 CreateNewNodeCanvas();
             }
 
+            if(GUILayout.Button(new GUIContent("Evaluate from last node")))
+            {
+                Node node = m_LoadedNodeCanvas.EvaluateFromLastEvaluatedNode();
+                if(node != null)
+                {
+                    Debug.Log("Node's name : " + node.name + "; Type : " + node.GetType());
+                    node.SetEvaluationResult();
+                }
+            }
+
             if (GUILayout.Button(new GUIContent("Evaluate")))
             {
                 Node node = LoadedNodeCanvas.Evaluate();
                 if (node != null)
                 {
                     //Debug.Log("Found node : " + node.ToString());
-                    try
-                    {
-                        StateNode sNode = (StateNode)node;
-                        if (sNode)
-                        {
-                            Debug.Log(sNode.Settings.Value);
-                        }
-                    }
-                    catch (Exception)
-                    {
+                    //try
+                    //{
+                    //    StateNode sNode = (StateNode)node;
+                    //    if (sNode)
+                    //    {
+                    //        Debug.Log(sNode.Settings.Value);
+                    //    }
+                    //}
+                    //catch (Exception)
+                    //{
 
-                    }
-                    Debug.Log(node.GetType());
+                    //}
+                    Debug.Log("Node's name : " + node.name + "; Type : " + node.GetType());
                     node.SetEvaluationResult();
                 }
             }

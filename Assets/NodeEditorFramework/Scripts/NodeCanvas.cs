@@ -48,6 +48,8 @@ namespace NodeEditorFramework
         [SerializeField] private Hashtable m_Parameters;
         private List<string> m_ParametersNames;
 
+        private Node m_LastEvaluatedNode;
+        public Node LastEvaluatedNode => m_LastEvaluatedNode == null ? Entry : m_LastEvaluatedNode;
 
         #region Properties API
         public EntryNode Entry => NodeCount == 0 ? null : (EntryNode)m_Nodes[0];
@@ -100,7 +102,29 @@ namespace NodeEditorFramework
                 next = next.GetNextNode();
             }
 
+            m_LastEvaluatedNode = node;
             return node;
+        }
+
+
+        /// <summary>
+        /// Evaluate conditions starting from Last evaluated node (default Entry)
+        /// </summary>
+        /// <returns>Last node such that path from Last evaluated node to result node evaluates to true</returns>
+        public Node EvaluateFromLastEvaluatedNode()
+        {
+            Node node = LastEvaluatedNode;
+            Node next = node.GetNextNode();
+
+            while (next != null)
+            {
+                node = next;
+                next = next.GetNextNode();
+            }
+
+            m_LastEvaluatedNode = node;
+            return node;
+
         }
 
         /// <summary>
