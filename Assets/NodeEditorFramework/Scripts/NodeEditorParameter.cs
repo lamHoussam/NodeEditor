@@ -31,19 +31,20 @@ namespace NodeEditorFramework
     }
 
     [System.Serializable]
-    public class NodeEditorParameter : ScriptableObject
+    public class NodeEditorParameter
     {
         [SerializeField] private string m_ParamName;
         [SerializeField] private ParameterType m_Type;
         [SerializeField] private NodeEditorParameterValue m_Value;
 
+        
 
         #region Properties API
         public string Name => m_ParamName;
         public ParameterType Type => m_Type;
         public NodeEditorParameterValue Value => m_Value;
         #endregion
-
+    
         //public T GetValue<T>()
         //{
         //    if(typeof)
@@ -51,6 +52,37 @@ namespace NodeEditorFramework
 
 
         #region API
+
+        public NodeEditorParameter()
+        {
+            m_Type = ParameterType.Bool;
+            m_Value = new NodeEditorParameterValue();
+            m_ParamName = "Parameter";
+        }
+
+        public NodeEditorParameter(ParameterType type, object value, string name)
+        {
+            m_Type = type;
+            m_ParamName = name;
+
+            if (m_Type == ParameterType.Bool)
+                m_Value.BoolValue = (bool)value;
+            else
+                m_Value.IntValue = (int)value;
+        }
+
+        public NodeEditorParameter(int type, object value, string name)
+        {
+            m_Type = (ParameterType)type;
+            m_ParamName = name;
+
+            if (m_Type == ParameterType.Bool)
+                m_Value.BoolValue = (bool)value;
+            else
+                m_Value.IntValue = (int)value;
+        }
+
+
         /// <summary>
         /// Get boolean value
         /// </summary>
@@ -110,22 +142,6 @@ namespace NodeEditorFramework
             throw new System.Exception("Wrong type");
         }
 
-        /// <summary>
-        /// Initialises parameter values 
-        /// </summary>
-        /// <param name="value">Parameter's value</param>
-        /// <param name="name">Parameter's name</param>
-        public void SetNodeEditorParameter(ParameterType type, object value, string name)
-        {
-            m_Type = type;
-            m_ParamName = name;
-
-            if (type == ParameterType.Bool)
-                m_Value.BoolValue = (bool)value;
-            else
-                m_Value.IntValue = (int)value;
-        }
-
         #endregion
 
 #if UNITY_EDITOR
@@ -160,7 +176,10 @@ namespace NodeEditorFramework
             GUILayout.BeginHorizontal();
             string newName = GUILayout.TextField(Name);
             if (CheckCanUseName(newName))
+            {
+                NodeEditor.Instance.LoadedNodeCanvas.ChangeParameterName(m_ParamName, newName);
                 m_ParamName = newName;
+            }
 
             GUILayout.FlexibleSpace();
 
@@ -190,8 +209,6 @@ namespace NodeEditorFramework
                 NodeEditor.Instance.OnClickRemoveParameter(this);
 
             GUILayout.EndVertical();
-
-            //GUILayout.EndArea();
         }
 
         public void OnRemove()

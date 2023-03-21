@@ -1,9 +1,42 @@
 using System.Collections.Generic;
-using UnityEditor;
+using System.IO;
 using UnityEngine;
+using System.Collections;
 
 namespace NodeEditorFramework
 {
+    [System.Serializable]
+    public class SerializableHashtable
+    {
+        public string[] keys;
+        public NodeEditorParameter[] values;
+
+        public Hashtable ToHashtable()
+        {
+            Hashtable ht = new Hashtable();
+            for (int i = 0; i < keys.Length; i++)
+            {
+                ht.Add(keys[i], values[i]);
+            }
+            return ht;
+        }
+
+        public static SerializableHashtable FromHashtable(Hashtable ht)
+        {
+            SerializableHashtable sht = new SerializableHashtable();
+            sht.keys = new string[ht.Keys.Count];
+            sht.values = new NodeEditorParameter[ht.Values.Count];
+            int i = 0;
+            foreach (var key in ht.Keys)
+            {
+                sht.keys[i] = key.ToString();
+                sht.values[i] = (NodeEditorParameter)ht[key];
+                i++;
+            }
+            return sht;
+        }
+    }
+
     public class NodeCanvas : ScriptableObject
     {
         [SerializeField] private List<Node> m_Nodes;
@@ -12,7 +45,9 @@ namespace NodeEditorFramework
         private Vector2 m_scrollPosition;
 
         // TODO: Optimise to use only Hashtable
-        [SerializeField] private List<NodeEditorParameter> m_Parameters;
+        [SerializeField] private Hashtable m_Parameters;
+        private List<string> m_ParametersNames;
+
 
         #region Properties API
         public EntryNode Entry => NodeCount == 0 ? null : (EntryNode)m_Nodes[0];
@@ -25,21 +60,9 @@ namespace NodeEditorFramework
         public Node GetNode(int ind) => m_Nodes[ind];
         public NodeConnection GetNodeConnection(int ind) => m_NodesConnections[ind];
 
-        public NodeEditorParameter GetParameter(string name)
-        {
-            for(int i = 0; i < m_Parameters.Count; i++)
-                if (m_Parameters[i].Name.Equals(name))
-                    return m_Parameters[i];
-
-            Debug.LogError("No parameter with name : " + name + " was found");
-            return null;
-        }
-        public NodeEditorParameter GetParameter(int ind)
-        {
-            return ind >= ParametersCount ? null : m_Parameters[ind];
-            //object obj = m_Parameters[ind];
-            //return (NodeEditorParameter)obj;
-        }
+        public NodeEditorParameter GetParameter(string name) => (NodeEditorParameter)m_Parameters[name];
+        public NodeEditorParameter GetParameter(int ind) => (NodeEditorParameter)(m_Parameters[m_ParametersNames[ind]]);
+        public NodeEditorParameter GetFirstOrNull() => ParametersCount == 0 ? null : GetParameter(0);
 
         /// <summary>
         /// Get boolean value of parameter with name param
@@ -56,25 +79,11 @@ namespace NodeEditorFramework
         public void SetBool(string param, bool value) => GetParameter(param)?.SetBool(value);
 
         /// <summary>
-        /// 
-        /// </summary>
-        /// <returns>First parameter null if no parameters</returns>
-        public NodeEditorParameter GetFirst() => ParametersCount == 0 ? null : m_Parameters[0];
-
-        /// <summary>
         /// Checks if parameter with name exists already
         /// </summary>
         /// <param name="name">name to check</param>
         /// <returns>if exists</returns>
-        public bool ContainsParameter(string name)
-        {
-            for(int i = 0; i < m_Parameters.Count; i++)
-                if (m_Parameters[i].Name.Equals(name))
-                    return true;
-
-            return false;
-        }
-        
+        public bool ContainsParameter(string name) => m_Parameters.ContainsKey(name);        
 
         /// <summary>
         /// Evaluate conditions starting from Entry
@@ -112,6 +121,64 @@ namespace NodeEditorFramework
 
             return node == Entry ? default : (T)node;
         }
+
+        public void SaveCanvasParameterState()
+        {
+            string saveFileName = name + "_params.json";
+
+            
+            string json = JsonUtility.ToJson(SerializableHashtable.FromHashtable(m_Parameters));
+            string filePath = Path.Combine(Application.persistentDataPath, saveFileName);
+            Debug.LogWarning(json);
+            File.WriteAllText(filePath, json);
+        }
+
+        public void LoadCanvasParameterState()
+        {
+            string saveFileName = name + "_params.json";
+
+            string filePath = Path.Combine(Application.persistentDataPath, saveFileName);
+
+
+            if (File.Exists(filePath))
+            {
+                string json = File.ReadAllText(filePath);
+                m_Parameters = JsonUtility.FromJson<SerializableHashtable>(json).ToHashtable();
+                //m_ParametersNames = (List<string>)m_Parameters.Keys;
+                m_ParametersNames = new List<string>();
+
+                foreach (string parName in m_Parameters.Keys)
+                    m_ParametersNames.Add(parName);
+
+            }
+            else
+            {
+                Debug.Log("Save file not found.");
+            }
+        }
+
+        public void DeleteCanvasParameterState()
+        {
+            string saveFileName = name + "_params.json";
+            string filePath = Path.Combine(Application.persistentDataPath, saveFileName);
+
+            if (File.Exists(filePath)) 
+                File.Delete(filePath);
+        }
+
+        public void ChangeParameterName(string oldName, string newName)
+        {
+            if (!m_Parameters.ContainsKey(oldName))
+                return;
+
+            NodeEditorParameter param = (NodeEditorParameter)m_Parameters[oldName];
+            m_Parameters.Remove(oldName);
+            m_Parameters.Add(newName, param);
+
+            m_ParametersNames.Remove(oldName);
+            m_ParametersNames.Add(newName);
+        }
+
         #endregion
 
 #if UNITY_EDITOR
@@ -190,7 +257,8 @@ namespace NodeEditorFramework
         /// <param name="parameter">Parameter to add</param>
         public void AddParameter(NodeEditorParameter parameter)
         {
-            m_Parameters ??= new List<NodeEditorParameter>();
+            m_Parameters ??= new Hashtable();
+            m_ParametersNames ??= new List<string>();
 
             if (ContainsParameter(parameter.Name))
             {
@@ -198,18 +266,14 @@ namespace NodeEditorFramework
                 return;
             }
 
-            m_Parameters.Add(parameter);
-
-            if (!System.String.IsNullOrEmpty(AssetDatabase.GetAssetPath(this)))
-            {
-                AssetDatabase.AddObjectToAsset(parameter, this);
-                AssetDatabase.Refresh();
-            }
+            m_Parameters.Add(parameter.Name, parameter);
+            m_ParametersNames.Add(parameter.Name);
         }
 
         public void RemoveParameter(NodeEditorParameter param)
         {
             m_Parameters?.Remove(param);
+            m_ParametersNames?.Remove(param.Name);
         }
 
         public void RemoveParameter(string name) => RemoveParameter(GetParameter(name));

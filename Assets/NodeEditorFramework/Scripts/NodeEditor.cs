@@ -1,7 +1,5 @@
 using System;
 using UnityEngine;
-using System.Linq;
-using System.Collections.Generic;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -67,6 +65,8 @@ namespace NodeEditorFramework
             {
                 Instance.CreateNewNodeCanvas();
             }
+
+            //Instance.LoadedNodeCanvas.LoadCanvasParameterState();
 
             Instance.m_scale = 1;
         }
@@ -259,6 +259,8 @@ namespace NodeEditorFramework
             }
             m_LoadedNodeCanvas = newNodeCanvas;
 
+            m_LoadedNodeCanvas.LoadCanvasParameterState();
+
             string[] folders = path.Split(new char[] { '/' }, System.StringSplitOptions.None);
             m_openedCanvas = folders[^1];
             m_openedCanvasPath = path;
@@ -279,6 +281,7 @@ namespace NodeEditorFramework
             string existingPath = AssetDatabase.GetAssetPath(m_LoadedNodeCanvas);
             if (!System.String.IsNullOrEmpty(existingPath))
             {
+                m_LoadedNodeCanvas.SaveCanvasParameterState();
                 if (existingPath != path)
                 {
                     AssetDatabase.CopyAsset(existingPath, path);
@@ -302,14 +305,10 @@ namespace NodeEditorFramework
                 AssetDatabase.AddObjectToAsset(node, m_LoadedNodeCanvas);
             }
 
+            m_LoadedNodeCanvas.SaveCanvasParameterState();
 
-            for(int i = 0; i < m_LoadedNodeCanvas.ParametersCount; i++)
-            {
-                NodeEditorParameter param = m_LoadedNodeCanvas.GetParameter(i);
-                AssetDatabase.AddObjectToAsset(param, m_LoadedNodeCanvas);
-            }
 
-            for(int i = 0; i < m_LoadedNodeCanvas.NodeConnectionsCount; i++)
+            for (int i = 0; i < m_LoadedNodeCanvas.NodeConnectionsCount; i++)
             {
                 NodeConnection cnx = m_LoadedNodeCanvas.GetNodeConnection(i);
                 for (int j = 0; j < cnx.ConditionsCount; j++)
@@ -422,7 +421,7 @@ namespace NodeEditorFramework
             if(m_LoadedNodeCanvas.ParametersCount == 0 || connection == null) 
                 return;
 
-            NodeEditorParameter param = m_LoadedNodeCanvas.GetFirst();
+            NodeEditorParameter param = m_LoadedNodeCanvas.GetFirstOrNull();
             ConnectionCondition condition = CreateInstance<ConnectionCondition>();
             object defaultValue = param.Type == ParameterType.Bool ? (object)false : (object)0;
 
@@ -499,12 +498,11 @@ namespace NodeEditorFramework
             if (!m_LoadedNodeCanvas)
                 return;
 
-            NodeEditorParameter param = CreateInstance<NodeEditorParameter>();
+            NodeEditorParameter param = new NodeEditorParameter(ParameterType.Bool, false, "Parameter");
 
-            NodeEditorParameter frst = m_LoadedNodeCanvas.GetFirst();
+            NodeEditorParameter frst = m_LoadedNodeCanvas.GetFirstOrNull();
             string paramName = frst == null ? "Parameter" : frst.Name + "1";
 
-            param.SetNodeEditorParameter(ParameterType.Bool, false, "Parameter");
             m_LoadedNodeCanvas.AddParameter(param);
         }
 
@@ -621,6 +619,7 @@ namespace NodeEditorFramework
         public void OnDisable()
         {
             ClearConnectionSelection();
+
         }
 
         #endregion
