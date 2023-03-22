@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using System.Collections;
+using Unity.VisualScripting;
 
 namespace NodeEditorFramework
 {
@@ -51,6 +52,8 @@ namespace NodeEditorFramework
         private Node m_LastEvaluatedNode;
         public Node LastEvaluatedNode => m_LastEvaluatedNode == null ? Entry : m_LastEvaluatedNode;
 
+        private Hashtable m_NodesDiscoveredHashtable;
+
         #region Properties API
         public EntryNode Entry => NodeCount == 0 ? null : (EntryNode)m_Nodes[0];
         public int NodeCount => m_Nodes == null ? 0 : m_Nodes.Count;
@@ -93,6 +96,8 @@ namespace NodeEditorFramework
         /// <returns>Last node such that path from Entry to node evaluates to true</returns>
         public Node Evaluate()
         {
+            //m_Nodes[0].GetInstanceID();
+
 
             Node node = Entry;
             Node next = node.GetNextNode();
@@ -105,6 +110,14 @@ namespace NodeEditorFramework
             m_LastEvaluatedNode = node;
             return node;
         }
+
+
+        public Node EvaluateFrom(Node startingNode)
+        {
+            return default;
+        }
+
+
 
 
         /// <summary>
@@ -135,15 +148,84 @@ namespace NodeEditorFramework
         public T Evaluate<T>() where T : Node
         {
             Node node = Entry;
-            T next = node.GetNextNode<T>();
 
-            while (next != null)
+            m_NodesDiscoveredHashtable?.Clear();
+            m_NodesDiscoveredHashtable = new Hashtable();
+
+            for (int i = 0; i < NodeCount; i++)
+                m_NodesDiscoveredHashtable.Add(m_Nodes[i].GetInstanceID(), false);
+
+            T result = FindNode<T>(node);
+            m_LastEvaluatedNode = result;
+
+            return result;
+
+        }
+
+        private T FindNode<T>(Node node) where T : Node
+        {
+            m_NodesDiscoveredHashtable[node.GetInstanceID()] = true;
+            //Node next = node.GetNextNode();
+
+            Node next = default;
+
+            for(int i = 0; i < node.ConnectionsCount; i++)
             {
-                node = next;
-                next = next.GetNextNode<T>();
+                NodeConnection cnx = node.GetConnection(i);
+                //Debug.LogWarning("Node : " + cnx.To);
+                bool discovered = (bool)m_NodesDiscoveredHashtable[cnx.To.GetInstanceID()];
+                //Debug.LogWarning("Disc : " + discovered);
+                if (cnx.EvaluateConditions() && !discovered)
+                    next = cnx.To;
             }
 
-            return node == Entry ? default : (T)node;
+            //// Only consider paths from Entry
+            if (next == default(Node))
+            {
+                for(int i = 0; i < Entry.ConnectionsCount; i++)
+                {
+                    if (!Entry.GetConnection(i).EvaluateConditions())
+                        continue;
+                    Node currentNode = Entry.GetConnection(i).To;
+                    if (currentNode)
+                    {
+                        bool discovered = (bool)m_NodesDiscoveredHashtable[currentNode.GetInstanceID()];
+                        m_NodesDiscoveredHashtable[currentNode.GetInstanceID()] = true;
+                        if (!discovered)
+                        {
+                            next = currentNode;
+                            break;
+                        }
+                    }
+
+                }
+            }
+
+            //// Used to Evaluate whole graph
+            //if(next == default(Node))
+            //    for(int i = 0; i < NodeCount; i++)
+            //        if (!(bool)m_NodesDiscoveredHashtable[m_Nodes[i].GetInstanceID()])
+            //            next = m_Nodes[i];
+
+            if (next == default(Node))
+                return default(T);
+
+            T prevRes = default(T);
+            if (next.GetType() == typeof(T))
+                prevRes = next as T;
+
+            T nextUndiscovered = FindNode<T>(next);
+            return nextUndiscovered == default(T) ? prevRes : nextUndiscovered;
+        }
+
+        public T EvaluateFromLastEvaluatedNode<T>() where T : Node
+        {
+            return default;
+        }
+
+        public T EvaluateFrom<T>(Node node) where T : Node
+        {
+            return default;
         }
 
         public void SaveCanvasParameterState()

@@ -166,6 +166,7 @@ namespace NodeEditorFramework
         {
             m_Conditions?.Clear();
             m_From.RemoveConnection(this);
+            DestroyImmediate(this);
         }
 
         #endregion

@@ -356,7 +356,18 @@ namespace NodeEditorFramework
                 CreateNewNodeCanvas();
             }
 
-            if(GUILayout.Button(new GUIContent("Evaluate from last node")))
+            if(GUILayout.Button(new GUIContent("Evaluate to find StateNode")))
+            {
+                Node node = m_LoadedNodeCanvas.Evaluate<StateNode>();
+                if (node)
+                {
+                    Debug.Log("Node's name : " + node.name + "; Type : " + node.GetType());
+                    node.SetEvaluationResult();
+                }
+            }
+
+
+            if (GUILayout.Button(new GUIContent("Evaluate from last node")))
             {
                 Node node = m_LoadedNodeCanvas.EvaluateFromLastEvaluatedNode();
                 if(node != null)
