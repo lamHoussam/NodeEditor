@@ -113,7 +113,7 @@ namespace NodeEditorFramework
                 return true;
 
             if (m_Parameter.Type == ParameterType.Bool)
-                return m_Value.BoolValue == m_Parameter.Value.BoolValue;
+                return m_Value.BoolValue == NodeEditor.Instance.LoadedNodeCanvas.GetParameter(m_Parameter.Name).Value.BoolValue;
             else
                 return m_Value.IntValue == m_Parameter.Value.IntValue;
         }

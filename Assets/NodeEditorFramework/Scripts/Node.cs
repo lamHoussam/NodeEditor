@@ -45,7 +45,10 @@ namespace NodeEditorFramework
 
             for(int i = 0; i < m_Connections.Count; i++)
                 if (m_Connections[i].EvaluateConditions())
+                {
+                    Debug.LogError(m_Connections[i].To);
                     return m_Connections[i].To;
+                }
 
             return null;
         }

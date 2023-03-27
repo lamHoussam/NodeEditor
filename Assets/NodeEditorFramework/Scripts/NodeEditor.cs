@@ -395,6 +395,11 @@ namespace NodeEditorFramework
                     //{
 
                     //}
+                    if(node.GetType() == typeof(StateNode))
+                    {
+
+                        Debug.Log("Name : " + (node as StateNode).Settings.name);
+                    }
                     Debug.Log("Node's name : " + node.name + "; Type : " + node.GetType());
                     node.SetEvaluationResult();
                 }
