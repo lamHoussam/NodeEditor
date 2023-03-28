@@ -213,8 +213,8 @@ namespace NodeEditorFramework
             if (m_LoadedNodeCanvas.Entry == null)
                 OnClickAddNode(new Vector2(Instance.position.width / 2, Instance.position.height / 2), "EntryNode");
 
-            for (int i = 0; i < m_LoadedNodeCanvas.NodeConnectionsCount; i++)
-                m_LoadedNodeCanvas.GetNodeConnection(i).Deselect();
+            //for (int i = 0; i < m_LoadedNodeCanvas.NodeConnectionsCount; i++)
+            //    m_LoadedNodeCanvas.GetNodeConnection(i).Deselect();
         }
 
 
@@ -451,7 +451,7 @@ namespace NodeEditorFramework
             ConnectionCondition condition = CreateInstance<ConnectionCondition>();
             object defaultValue = param.Type == ParameterType.Bool ? (object)false : (object)0;
 
-            condition.SetConnectionCondition(param, defaultValue);
+            condition.SetConnectionCondition(param, defaultValue, m_LoadedNodeCanvas);
 
             connection.AddCondition(condition);
         }
@@ -640,12 +640,6 @@ namespace NodeEditorFramework
                 m_SelectedNodeConnection.Deselect();
 
             m_SelectedNodeConnection = null;
-        }
-
-        public void OnDisable()
-        {
-            ClearConnectionSelection();
-
         }
 
         #endregion

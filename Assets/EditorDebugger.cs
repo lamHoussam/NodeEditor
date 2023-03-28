@@ -21,6 +21,13 @@ public class EditorDebugger : MonoBehaviour
         }
     }
 
+    public void Evaluate()
+    {
+        Node node = m_NodeCanvas.Evaluate();
+        if(node.GetType() == typeof(StateNode))
+            Debug.LogError((node as StateNode).Settings);
+    }
+
     private void Update()
     {
         Display();

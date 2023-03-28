@@ -6,9 +6,10 @@ namespace NodeEditorFramework
     [System.Serializable]
     public class ConnectionCondition : ScriptableObject
     {
-        [SerializeField] private NodeEditorParameter m_Parameter;
+        [SerializeField] private string m_ParameterName;
         [SerializeField] private NodeEditorParameterValue m_Value;
 
+        private NodeCanvas m_NodeCanvas;
 
         #region API
         /// <summary>
@@ -16,13 +17,15 @@ namespace NodeEditorFramework
         /// </summary>
         /// <param name="parameter">condition's parameter</param>
         /// <param name="value">value to check</param>
-        public void SetConnectionCondition(NodeEditorParameter parameter, object value)
+        public void SetConnectionCondition(NodeEditorParameter parameter, object value, NodeCanvas nodeCnv)
         {
-            m_Parameter = parameter;
+            m_ParameterName = parameter.Name;
             if(parameter.Type == ParameterType.Bool)
                 m_Value.BoolValue = (bool)value;
             if(parameter.Type == ParameterType.Int)
                 m_Value.IntValue = (int)value;
+
+            m_NodeCanvas = nodeCnv; 
         }
 
 #if UNITY_EDITOR
@@ -31,7 +34,7 @@ namespace NodeEditorFramework
         /// </summary>
         public void Display()
         {
-            if (m_Parameter == null)
+            if (m_ParameterName == null)
                 return;
 
             NodeCanvas cnv = NodeEditor.Instance.LoadedNodeCanvas;
@@ -43,7 +46,7 @@ namespace NodeEditorFramework
             for (int i = 0; i < paramCount; i++)
             {
                 choices[i] = cnv.GetParameter(i).Name;
-                if (choices[i] == m_Parameter.Name)
+                if (choices[i] == m_ParameterName)
                     currentIndx = i;
             }
 
@@ -66,8 +69,9 @@ namespace NodeEditorFramework
 
             int chosenParamNameIndx = EditorGUILayout.Popup(currentIndx, choices);
 
-            m_Parameter = cnv.GetParameter(chosenParamNameIndx);
-            if (m_Parameter == null)
+            NodeEditorParameter param = cnv.GetParameter(chosenParamNameIndx);
+
+            if (param == null)
             {
                 NodeEditor.Instance.OnClickRemoveCondition(this);
 
@@ -76,8 +80,9 @@ namespace NodeEditorFramework
                 GUI.changed = true;
                 return;
             }
+            m_ParameterName = param.Name;
 
-            switch (m_Parameter.Type)
+            switch (param.Type)
             {
                 case ParameterType.Bool:
                     m_Value.BoolValue = EditorGUILayout.Toggle(m_Value.BoolValue);
@@ -109,13 +114,14 @@ namespace NodeEditorFramework
         /// <returns>Equality between parameter's value and condition's value</returns>
         public bool Evaluate()
         {
-            if (m_Parameter == null)
+            if (m_ParameterName == null)
                 return true;
 
-            if (m_Parameter.Type == ParameterType.Bool)
-                return m_Value.BoolValue == NodeEditor.Instance.LoadedNodeCanvas.GetParameter(m_Parameter.Name).Value.BoolValue;
+            NodeEditorParameter param = m_NodeCanvas.GetParameter(m_ParameterName);
+            if (param.Type == ParameterType.Bool)
+                return m_Value.BoolValue == param.Value.BoolValue;
             else
-                return m_Value.IntValue == m_Parameter.Value.IntValue;
+                return m_Value.IntValue == param.Value.IntValue;
         }
 
         #endregion

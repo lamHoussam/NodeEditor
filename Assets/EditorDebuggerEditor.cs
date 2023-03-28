@@ -22,5 +22,8 @@ public class EditorDebuggerEditor : Editor
         if (GUILayout.Button("Right SHoulder"))
             m_Target.Cnv.SetBool("rightShoulder", !m_Target.Cnv.GetBool("rightShoulder"));
         EditorGUILayout.EndHorizontal();
+
+        if (GUILayout.Button("Evaluate"))
+            m_Target.Evaluate();
     }
 }

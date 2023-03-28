@@ -94,7 +94,7 @@ namespace NodeEditorFramework
         {
             Node node = startingNode;
             Node next = node.GetNextNode();
-            while (next != default)
+            while (next != null)
             {
                 node = next;
                 next = next.GetNextNode();
