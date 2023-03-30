@@ -65,7 +65,12 @@ namespace NodeEditorFramework
         public NodeConnection GetNodeConnection(int ind) => m_NodesConnections[ind];
 
         public NodeEditorParameter GetParameter(string name) => (NodeEditorParameter)m_Parameters[name];
-        public NodeEditorParameter GetParameter(int ind) => (NodeEditorParameter)(m_Parameters[m_ParametersNames[ind]]);
+        public NodeEditorParameter GetParameter(int ind)
+        {
+            if (ind >= m_ParametersNames.Count || ind < 0)
+                return null;
+            return (NodeEditorParameter)(m_Parameters[m_ParametersNames[ind]]);
+        }
         public NodeEditorParameter GetFirstOrNull() => ParametersCount == 0 ? null : GetParameter(0);
 
         /// <summary>
@@ -355,13 +360,12 @@ namespace NodeEditorFramework
             m_ParametersNames.Add(parameter.Name);
         }
 
-        public void RemoveParameter(NodeEditorParameter param)
+        public void RemoveParameter(string name)
         {
-            m_Parameters?.Remove(param);
-            m_ParametersNames?.Remove(param.Name);
+            m_Parameters?.Remove(name);
+            m_ParametersNames?.Remove(name);
         }
-
-        public void RemoveParameter(string name) => RemoveParameter(GetParameter(name));
+        public void RemoveParameter(NodeEditorParameter param) => RemoveParameter(param.Name);
         public void RemoveParameter(int ind) => RemoveParameter(GetParameter(ind));
 
         /// <summary>
@@ -381,7 +385,7 @@ namespace NodeEditorFramework
             for (int i = 0; i < m_Parameters.Count; i++)
             {
                 NodeEditorParameter param = GetParameter(i);
-                param.Display();
+                param?.Display();
                 //rect.position += Vector2.up * 100;
             }
 
