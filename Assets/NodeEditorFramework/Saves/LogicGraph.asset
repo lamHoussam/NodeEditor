@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Rect:
     serializedVersion: 2
-    x: 393
-    y: 158.2
+    x: 447
+    y: 229.2
     width: 200
     height: 50
   m_InitialRect:
@@ -91,8 +91,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Rect:
     serializedVersion: 2
-    x: 373
-    y: 381.2
+    x: 427
+    y: 452.2
     width: 200
     height: 50
   m_InitialRect:
@@ -118,8 +118,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Rect:
     serializedVersion: 2
-    x: 175
-    y: 293.7
+    x: 229
+    y: 364.7
     width: 200
     height: 50
   m_InitialRect:
@@ -129,7 +129,6 @@ MonoBehaviour:
     width: 200
     height: 50
   m_Connections:
-  - {fileID: 0}
   - {fileID: 3131760825068075504}
   - {fileID: -2195556711641903139}
   m_nodeColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}

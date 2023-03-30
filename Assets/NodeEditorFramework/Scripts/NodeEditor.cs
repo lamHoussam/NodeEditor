@@ -66,7 +66,7 @@ namespace NodeEditorFramework
                 Instance.CreateNewNodeCanvas();
             }
 
-            //Instance.LoadedNodeCanvas.LoadCanvasParameterState();
+            Instance.LoadedNodeCanvas.LoadCanvasParameterState();
 
             Instance.m_scale = 1;
         }

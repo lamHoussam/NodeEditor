@@ -9,7 +9,7 @@ namespace NodeEditorFramework
         [SerializeField] private string m_ParameterName;
         [SerializeField] private NodeEditorParameterValue m_Value;
 
-        private NodeCanvas m_NodeCanvas;
+        [SerializeField] private NodeCanvas m_NodeCanvas;
 
         #region API
         /// <summary>
