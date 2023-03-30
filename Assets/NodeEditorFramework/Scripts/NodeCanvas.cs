@@ -225,8 +225,11 @@ namespace NodeEditorFramework
             if (File.Exists(filePath))
             {
                 string json = File.ReadAllText(filePath);
-                m_Parameters = JsonUtility.FromJson<SerializableHashtable>(json).ToHashtable();
+                if (!json.Equals("[]"))
+                    m_Parameters = JsonUtility.FromJson<SerializableHashtable>(json).ToHashtable();
+
                 //m_ParametersNames = (List<string>)m_Parameters.Keys;
+                m_Parameters ??= new Hashtable();
                 m_ParametersNames = new List<string>();
 
                 foreach (string parName in m_Parameters.Keys)
