@@ -337,11 +337,11 @@ namespace NodeEditorFramework
 
             if (GUILayout.Button(new GUIContent("Save Canvas", "Saves the canvas as a new Canvas Asset File in the Assets Folder")))
             {
-                SaveNodeCanvas(EditorUtility.SaveFilePanelInProject("Save Node Canvas", "NodeCanvas", "asset", "Saving to a file is only needed once.", m_editorPath + "Saves/"));
+                SaveNodeCanvas(EditorUtility.SaveFilePanelInProject("Save Node Canvas", "NodeCanvas", "asset", Application.dataPath));
             }
             if (GUILayout.Button(new GUIContent("Load Canvas", "Loads the canvas from a Canvas Asset File in the Assets Folder")))
             {
-                string path = EditorUtility.OpenFilePanel("Load Node Canvas", m_editorPath + "Saves/", "asset");
+                string path = EditorUtility.OpenFilePanel("Load Node Canvas", Application.dataPath, "asset");
                 if (!path.Contains(Application.dataPath))
                 {
                     if (path != String.Empty)
@@ -381,28 +381,7 @@ namespace NodeEditorFramework
             {
                 Node node = LoadedNodeCanvas.Evaluate();
                 if (node != null)
-                {
-                    //Debug.Log("Found node : " + node.ToString());
-                    //try
-                    //{
-                    //    StateNode sNode = (StateNode)node;
-                    //    if (sNode)
-                    //    {
-                    //        Debug.Log(sNode.Settings.Value);
-                    //    }
-                    //}
-                    //catch (Exception)
-                    //{
-
-                    //}
-                    if(node.GetType() == typeof(StateNode))
-                    {
-
-                        Debug.Log("Name : " + (node as StateNode).Settings.name);
-                    }
-                    Debug.Log("Node's name : " + node.name + "; Type : " + node.GetType());
                     node.SetEvaluationResult();
-                }
             }
 
 
@@ -640,6 +619,12 @@ namespace NodeEditorFramework
                 m_SelectedNodeConnection.Deselect();
 
             m_SelectedNodeConnection = null;
+        }
+
+        private void OnDisable()
+        {
+
+            //m_Instance.Close();
         }
 
         #endregion
