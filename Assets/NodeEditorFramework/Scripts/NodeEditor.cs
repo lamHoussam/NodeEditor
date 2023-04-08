@@ -11,19 +11,16 @@ namespace NodeEditorFramework
 
         private NodeCanvas m_LoadedNodeCanvas;
 
-        public const string m_editorPath = "Assets/NodeCanvases/";
-        private string m_openedCanvas = "New Canvas";
+        private string m_openedCanvas = "NodeCanvas";
         private string m_openedCanvasPath;
 
         private float m_sideWindowWidth = 400;
         private Node m_SelectedNodeForConnection;
 
-        private NodeConnection m_SelectedNodeConnection; 
+        private NodeConnection m_SelectedNodeConnection;
 
         private Vector2 m_offset;
         private Vector2 m_drag;
-
-
 
         private float m_scale = 1;
 
@@ -88,7 +85,7 @@ namespace NodeEditorFramework
                 for (int i = 0; i < m_LoadedNodeCanvas.NodeCount; i++)
                     m_LoadedNodeCanvas.GetNode(i).Draw();
 
-                for(int i = 0; i < m_LoadedNodeCanvas.NodeConnectionsCount; i++)
+                for (int i = 0; i < m_LoadedNodeCanvas.NodeConnectionsCount; i++)
                     m_LoadedNodeCanvas.GetNodeConnection(i).Draw();
             }
 
@@ -287,23 +284,26 @@ namespace NodeEditorFramework
                     AssetDatabase.CopyAsset(existingPath, path);
                     LoadNodeCanvas(path);
                 }
-                return;
             }
-            
-            AssetDatabase.CreateAsset(m_LoadedNodeCanvas, path);
+            else
+                AssetDatabase.CreateAsset(m_LoadedNodeCanvas, path);
+
 
             for (int i = 0; i < m_LoadedNodeCanvas.NodeConnectionsCount; i++)
             {
                 NodeConnection cnx = m_LoadedNodeCanvas.GetNodeConnection(i);
-                AssetDatabase.AddObjectToAsset(cnx, m_LoadedNodeCanvas);
-
+                if (!AssetDatabase.Contains(cnx))
+                    AssetDatabase.AddObjectToAsset(cnx, m_LoadedNodeCanvas);
             }
 
             for (int nodeCnt = 0; nodeCnt < m_LoadedNodeCanvas.NodeCount; nodeCnt++)
             {
                 Node node = m_LoadedNodeCanvas.GetNode(nodeCnt);
-                AssetDatabase.AddObjectToAsset(node, m_LoadedNodeCanvas);
+
+                if (!AssetDatabase.Contains(node))
+                    AssetDatabase.AddObjectToAsset(node, m_LoadedNodeCanvas);
             }
+
 
             m_LoadedNodeCanvas.SaveCanvasParameterState();
 
@@ -314,7 +314,8 @@ namespace NodeEditorFramework
                 for (int j = 0; j < cnx.ConditionsCount; j++)
                 {
                     ConnectionCondition cnd = cnx.GetCondition(j);
-                    AssetDatabase.AddObjectToAsset(cnd, cnx);
+                    if (!AssetDatabase.Contains(cnd))
+                        AssetDatabase.AddObjectToAsset(cnd, cnx);
 
                 }
 
@@ -356,7 +357,7 @@ namespace NodeEditorFramework
                 CreateNewNodeCanvas();
             }
 
-            if(GUILayout.Button(new GUIContent("Evaluate to find StateNode")))
+            if (GUILayout.Button(new GUIContent("Evaluate to find StateNode")))
             {
                 Node node = m_LoadedNodeCanvas.Evaluate<StateNode>();
                 if (node)
@@ -370,7 +371,7 @@ namespace NodeEditorFramework
             if (GUILayout.Button(new GUIContent("Evaluate from last node")))
             {
                 Node node = m_LoadedNodeCanvas.EvaluateFromLastEvaluatedNode();
-                if(node != null)
+                if (node != null)
                 {
                     Debug.Log("Node's name : " + node.name + "; Type : " + node.GetType());
                     node.SetEvaluationResult();
@@ -423,7 +424,7 @@ namespace NodeEditorFramework
         /// <param name="connection">Node connection to add condition to</param>
         public void OnClickAddCondition(NodeConnection connection)
         {
-            if(m_LoadedNodeCanvas.ParametersCount == 0 || connection == null) 
+            if (m_LoadedNodeCanvas.ParametersCount == 0 || connection == null)
                 return;
 
             NodeEditorParameter param = m_LoadedNodeCanvas.GetFirstOrNull();
@@ -443,7 +444,7 @@ namespace NodeEditorFramework
         {
             Vector2 entryOffset = m_LoadedNodeCanvas.Entry.Position - new Vector2(position.width, position.height) / 2;
 
-            for(int i = 0; i < m_LoadedNodeCanvas.NodeCount; i++)
+            for (int i = 0; i < m_LoadedNodeCanvas.NodeCount; i++)
                 m_LoadedNodeCanvas.GetNode(i).OnDrag(-entryOffset);
 
             GUI.changed = true;
@@ -545,7 +546,8 @@ namespace NodeEditorFramework
         /// Called on click remove condition
         /// </summary>
         /// <param name="condition">Condition to remove</param>
-        public void OnClickRemoveCondition(ConnectionCondition condition) {
+        public void OnClickRemoveCondition(ConnectionCondition condition)
+        {
             if (!m_SelectedNodeConnection)
                 return;
 

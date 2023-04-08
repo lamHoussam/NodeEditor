@@ -31,8 +31,8 @@ namespace NodeEditorFramework
             if (m_Conditions == null)
                 return true;
 
-            for(int i = 0; i < m_Conditions.Count; i++)
-                if (!m_Conditions[i].Evaluate()) 
+            for (int i = 0; i < m_Conditions.Count; i++)
+                if (!m_Conditions[i].Evaluate())
                     return false;
 
             return true;
@@ -166,7 +166,7 @@ namespace NodeEditorFramework
         {
             m_Conditions?.Clear();
             m_From.RemoveConnection(this);
-            DestroyImmediate(this);
+            //DestroyImmediate(this);
         }
 
         #endregion

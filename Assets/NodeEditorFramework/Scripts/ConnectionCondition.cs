@@ -20,12 +20,12 @@ namespace NodeEditorFramework
         public void SetConnectionCondition(NodeEditorParameter parameter, object value, NodeCanvas nodeCnv)
         {
             m_ParameterName = parameter.Name;
-            if(parameter.Type == ParameterType.Bool)
+            if (parameter.Type == ParameterType.Bool)
                 m_Value.BoolValue = (bool)value;
-            if(parameter.Type == ParameterType.Int)
+            if (parameter.Type == ParameterType.Int)
                 m_Value.IntValue = (int)value;
 
-            m_NodeCanvas = nodeCnv; 
+            m_NodeCanvas = nodeCnv;
         }
 
 #if UNITY_EDITOR
@@ -50,7 +50,7 @@ namespace NodeEditorFramework
                     currentIndx = i;
             }
 
-            if(currentIndx == -1)
+            if (currentIndx == -1)
             {
                 NodeEditor.Instance.OnClickRemoveCondition(this);
                 GUI.changed = true;

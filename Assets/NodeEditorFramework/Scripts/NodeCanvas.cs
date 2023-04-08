@@ -88,6 +88,20 @@ namespace NodeEditorFramework
         public void SetBool(string param, bool value) => GetParameter(param)?.SetBool(value);
 
         /// <summary>
+        /// Set integer value of parameter with name param
+        /// </summary>
+        /// <param name="param">Parameter to change</param>
+        /// <param name="value">New Value</param>
+        public void SetInteger(string param, int value) => GetParameter(param)?.SetInt(value);
+
+        /// <summary>
+        /// Get integer value of parameter with name param
+        /// </summary>
+        /// <param name="param">Variable's name</param>
+        /// <returns></returns>
+        public int GetInteger(string param) => GetParameter(param).GetInt();
+
+        /// <summary>
         /// Checks if parameter with name exists already
         /// </summary>
         /// <param name="name">name to check</param>
@@ -130,7 +144,7 @@ namespace NodeEditorFramework
 
             Node next = default;
 
-            for(int i = 0; i < node.ConnectionsCount; i++)
+            for (int i = 0; i < node.ConnectionsCount; i++)
             {
                 NodeConnection cnx = node.GetConnection(i);
                 //Debug.LogWarning("Node : " + cnx.To);
@@ -143,7 +157,7 @@ namespace NodeEditorFramework
             //// Only consider paths from Entry
             if (next == default(Node))
             {
-                for(int i = 0; i < Entry.ConnectionsCount; i++)
+                for (int i = 0; i < Entry.ConnectionsCount; i++)
                 {
                     if (!Entry.GetConnection(i).EvaluateConditions())
                         continue;
@@ -213,7 +227,9 @@ namespace NodeEditorFramework
         {
             string saveFileName = name + "_params.json";
 
-            
+            if (m_Parameters == null)
+                return;
+
             string json = JsonUtility.ToJson(SerializableHashtable.FromHashtable(m_Parameters));
             string filePath = Path.Combine(Application.persistentDataPath, saveFileName);
             Debug.LogWarning(json);
@@ -242,9 +258,7 @@ namespace NodeEditorFramework
 
             }
             else
-            {
                 Debug.Log("Save file not found.");
-            }
         }
 
         public void DeleteCanvasParameterState()
@@ -252,7 +266,7 @@ namespace NodeEditorFramework
             string saveFileName = name + "_params.json";
             string filePath = Path.Combine(Application.persistentDataPath, saveFileName);
 
-            if (File.Exists(filePath)) 
+            if (File.Exists(filePath))
                 File.Delete(filePath);
         }
 
@@ -289,13 +303,13 @@ namespace NodeEditorFramework
         /// <param name="node">node to remove</param>
         public void RemoveNode(Node node)
         {
-            if(m_NodesConnections != null)
+            if (m_NodesConnections != null)
             {
                 int initCount = m_NodesConnections.Count;
 
                 List<NodeConnection> cnxsToRemove = new List<NodeConnection>();
 
-                for(int i = 0; i < initCount; i++)
+                for (int i = 0; i < initCount; i++)
                 {
                     if (m_NodesConnections[i].From == node || m_NodesConnections[i].To == node)
                     {
@@ -304,7 +318,7 @@ namespace NodeEditorFramework
                     }
                 }
 
-                for(int i = 0; i < cnxsToRemove.Count; i++)
+                for (int i = 0; i < cnxsToRemove.Count; i++)
                     m_NodesConnections.Remove(cnxsToRemove[i]);
             }
 
