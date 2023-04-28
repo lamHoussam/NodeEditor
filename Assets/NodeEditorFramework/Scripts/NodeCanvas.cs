@@ -53,6 +53,9 @@ namespace NodeEditorFramework
 
         private Hashtable m_NodesDiscoveredHashtable;
 
+        private string ParamsFolderPath => Application.dataPath + Path.DirectorySeparatorChar + "NodeEditorFramework" +
+                Path.DirectorySeparatorChar + "_Params";
+
         #region Properties API
         public EntryNode Entry => NodeCount == 0 ? default : (EntryNode)m_Nodes[0];
         public int NodeCount => m_Nodes == null ? 0 : m_Nodes.Count;
@@ -231,16 +234,27 @@ namespace NodeEditorFramework
                 return;
 
             string json = JsonUtility.ToJson(SerializableHashtable.FromHashtable(m_Parameters));
-            string filePath = Path.Combine(Application.persistentDataPath, saveFileName);
-            Debug.LogWarning(json);
+            string filePath = Path.Combine(ParamsFolderPath, saveFileName);
+
+
+            Debug.LogWarning(filePath);
+
+            string directoryPath = Path.GetDirectoryName(filePath);
+            if (!Directory.Exists(directoryPath))
+                Directory.CreateDirectory(directoryPath);
+
+
             File.WriteAllText(filePath, json);
+
+            Debug.LogWarning(json);
         }
 
         public void LoadCanvasParameterState()
         {
             string saveFileName = name + "_params.json";
 
-            string filePath = Path.Combine(Application.persistentDataPath, saveFileName);
+            //string filePath = Path.Combine(Application.persistentDataPath, saveFileName);
+            string filePath = Path.Combine(ParamsFolderPath, saveFileName);
 
 
             if (File.Exists(filePath))

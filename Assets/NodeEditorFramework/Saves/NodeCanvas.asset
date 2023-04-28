@@ -1,5 +1,22 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-7476730712615593208
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d89f9ba8939ec3f43b3cac2f47a137c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ParameterName: TestParameter
+  m_Value:
+    m_boolValue: 1
+    m_intValue: 0
+  m_NodeCanvas: {fileID: 11400000}
 --- !u!114 &-4805125921649030178
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14,8 +31,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Rect:
     serializedVersion: 2
-    x: 484.4
-    y: 327.9
+    x: 420.4
+    y: 331.9
     width: 200
     height: 50
   m_InitialRect:
@@ -24,7 +41,8 @@ MonoBehaviour:
     y: 327.9
     width: 200
     height: 50
-  m_Connections: []
+  m_Connections:
+  - {fileID: 3850771681544383609}
   m_nodeColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
 --- !u!114 &11400000
 MonoBehaviour:
@@ -40,4 +58,48 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Nodes:
   - {fileID: -4805125921649030178}
-  m_NodesConnections: []
+  - {fileID: 8185941374244328258}
+  m_NodesConnections:
+  - {fileID: 3850771681544383609}
+--- !u!114 &3850771681544383609
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 792d20a9a554e2b4cbc381704a422964, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_From: {fileID: -4805125921649030178}
+  m_To: {fileID: 8185941374244328258}
+  m_Conditions:
+  - {fileID: -7476730712615593208}
+--- !u!114 &8185941374244328258
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32ca76c2fa32851468be4dae2fc75c52, type: 3}
+  m_Name: Camera Logic
+  m_EditorClassIdentifier: 
+  m_Rect:
+    serializedVersion: 2
+    x: 443
+    y: 213.2
+    width: 200
+    height: 50
+  m_InitialRect:
+    serializedVersion: 2
+    x: 443
+    y: 213.2
+    width: 200
+    height: 50
+  m_Connections: []
+  m_nodeColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
